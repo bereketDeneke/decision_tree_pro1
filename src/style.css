@@ -1,0 +1,48 @@
+/* .App{
+    font-family: sans-serif;
+    height: 100vh;
+    width: 100vw;
+} */
+
+
+html,
+body,
+#root,
+.App {
+  height: 100% !important;
+  width: 100%;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.box{
+  font-size: 12px;
+  font-family: sans-serif;
+  text-align: center;
+  display: flex;
+  grid-row:auto ;
+  flex-direction: column;
+  border: 0px solid rgb(34, 33, 56);
+  padding: 7px;
+  border-radius: 4px;
+  /* background-color: #e6d5d5; */
+}
+
+.box:hover{
+  box-shadow: 0px 0px 4px #555;
+}
+
+.box > select {
+  margin-top: 2px;
+  font-size: 12px;
+  width:max-content;
+  height: max-content;
+}
+
+.box > select:active{
+  border-width: 1px;
+  box-shadow: none;
+}

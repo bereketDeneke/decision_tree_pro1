@@ -1,7 +1,7 @@
 {
   "name": "decisiontree",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -9,13 +9,27 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/webpack-config": "^0.17.2",
+    "@reactflow/background": "^11.1.2",
+    "@reactflow/controls": "^11.1.2",
+    "@reactflow/core": "^11.4.2",
+    "@reactflow/minimap": "^11.3.2",
+    "@reactflow/node-resizer": "^1.2.2",
+    "@reactflow/node-toolbar": "^1.1.2",
     "expo": "~47.0.12",
+    "expo-document-picker": "^11.0.1",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-dom": "18.1.0",
+    "react-native": "0.70.5",
+    "react-native-base64": "^0.2.1",
+    "react-native-d3-tree-graph": "^1.0.12",
+    "react-native-web": "~0.18.9",
+    "react-scripts": "^5.0.1",
+    "reactflow": "^11.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "typescript": "^4.9.4"
   },
   "private": true
 }
