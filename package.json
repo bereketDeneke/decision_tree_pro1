@@ -16,6 +16,7 @@
     "@reactflow/minimap": "^11.3.2",
     "@reactflow/node-resizer": "^1.2.2",
     "@reactflow/node-toolbar": "^1.1.2",
+    "dagre": "^0.8.5",
     "expo": "~47.0.12",
     "expo-document-picker": "^11.0.1",
     "expo-status-bar": "~1.4.2",

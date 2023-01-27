@@ -113,14 +113,14 @@ class Node{
                 result.push(node.get_result());
             }
             let dict = {};
-            dict[this.text] = result
+            dict[this.text] = {content:result, level:this.level};
             return dict;
         }else if(this.Children.length == 1){
             let dict = {};
-            dict[this.text] = this.Children[0].get_result();
+            dict[this.text] = {content:this.Children[0].get_result(), level:this.level};
             return dict;
         }else{
-            return this.text;
+            return {content:this.text, level:this.level};
         }
     }
 };

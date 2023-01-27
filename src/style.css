@@ -19,6 +19,7 @@ body,
 }
 
 .box{
+  -webkit-text-security:square;
   font-size: 12px;
   font-family: sans-serif;
   text-align: center;
@@ -29,6 +30,14 @@ body,
   padding: 7px;
   border-radius: 4px;
   /* background-color: #e6d5d5; */
+}
+
+.box > label{
+  word-break: break-all; 
+  /* white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip; */
+
 }
 
 .box:hover{
