@@ -1,3 +1,3 @@
 ﻿# decision_tree_pro1
 
-The full update will be commited by tommorow.
+The full update will be made by tommorow.
