@@ -1,0 +1,287 @@
+::selection{
+  background: none;
+  color: none;
+}
+
+.mf_diagram_controlNodeContent {
+    box-shadow: rgba(0, 52, 102, 0.35) 4px 4px 4px;
+    text-align: center;
+    /* border: 1px solid #648dae;
+    background-color: #90caf9 !important; */
+
+    /* border: 1px solid #648dae; */
+    background-color: #eecda1 !important;
+    display: block;
+    margin-left:auto;
+    margin-right:auto;
+    /* width: 15em; */
+    /* left: 289.795px !important;
+    width: 375.26px !important; */
+    /* border: 5px solid #eecda1; */
+    /* border-radius: 25px; */
+    overflow-y: auto !important;
+}
+
+/* .mf_diagram_controlNodesContainer {
+    width: 3080px !important; 
+    height: 3080px !important;
+} */
+
+
+/* Two styles below ensures the scrollbar is visible */
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+  
+::-webkit-scrollbar-thumb {
+border-radius: 4px;
+background-color: rgba(0, 0, 0, .5);
+box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+#d1 {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-left: auto;
+    margin-right: auto;
+    width: 225px;
+    height: 50px;
+    padding-top: 5px;
+    /* padding-bottom: 25px; */
+}
+
+body {
+    font-family: Tahoma;
+    font-size: 14px;
+}
+
+table {
+    border-spacing: 0px;
+    margin-left: 10px;
+    border-right: 1px solid gray;
+    border-top: 1px solid gray;
+    font-size: 12px;
+}
+
+select {
+    font-family: Tahoma;
+    font-size: 14px;
+}
+
+td {
+    border-left: 1px solid gray;
+    padding: 5px;
+    border-bottom: 1px solid gray;
+}
+
+a {
+    word-break:break-all;
+}
+
+#result p {
+    word-break:break-all;
+}
+
+/* .searchbox {
+    background-color: lightgrey;
+    width: 40px;
+    height: 30px;
+    border: 15px solid #90caf9;
+    padding: 50px;
+    margin: 20px;
+    overflow: auto;
+} */
+
+#mydiv {
+    position: absolute;
+    z-index: 90;
+    width: 200px;
+    height: 100px;
+    top: 25px; 
+    right: 215px;
+    background-color: rgb(230, 229, 229);
+    /* border: 15px solid #90caf9; */
+    border: 15px solid #eecda1;
+    padding: 0px 50px 90px 50px;
+    overflow: auto;
+    border-radius: 25px;
+    /* 
+    background-color: #f1f1f1;
+    border: 1px solid #d3d3d3;
+    text-align: center; */
+}
+
+#mydivheader {
+    cursor: move;
+    position: fixed;
+    z-index: 91;
+    background-color: #eecda1;
+    text-align: center;
+    width: 200px; 
+    margin: auto;
+    /* background-color: rgb(230, 229, 229); */
+    /* padding: 10px;
+    z-index: 10;
+    /* background-color: #2196F3; */
+    /*color: #fff; */
+}
+
+/* #searchInput {
+    z-index: 1000;
+} */
+
+#select {
+    /* overflow: hidden; */
+    background-color: #eecda1;
+    text-align: center;
+    /* background-color: rgb(230, 229, 229); */
+    position: fixed; /* Set the navbar to fixed position */
+    /* Position the navbar at the top of the page */
+    width: 200px; 
+    
+    /* Full width */
+}
+
+
+
+/* Search bar */
+
+.search-wrapper {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top:50px;
+  left:50%;
+  z-index: 1000;
+}
+.search-wrapper.active {}
+
+.search-wrapper .input-holder {    
+  height: 70px;
+  width:70px;
+  overflow: hidden;
+  background: #f9cf90;
+  border-radius:6px;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+.search-wrapper.active .input-holder {
+  width:450px;
+  border-radius: 50px;
+  background: #f9cf90;
+  transition: all .5s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+}
+.search-wrapper .input-holder .search-input {
+  width:100%;
+  height: 50px;
+  padding:0px 70px 0 20px;
+  opacity: 0;
+  position: absolute;
+  top:0px;
+  left:0px;
+  /* background:  transparent; */
+  background-color: #f9cf90;
+  box-sizing: border-box;
+  border:none;
+  outline:none;
+  font-family:"Open Sans", Arial, Verdana;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  color:rgb(0, 0, 0);
+  transform: translate(0, 60px);
+  transition: all .3s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+  transition-delay: 0.3s;
+}
+.search-wrapper.active .input-holder .search-input {
+  opacity: 1;
+  transform: translate(0, 10px);
+}
+.search-wrapper .input-holder .search-icon {
+  width:70px;
+  height:70px;
+  border:none;
+  border-radius:6px;
+  background: #f9cf90;
+  padding:0px;
+  outline:none;
+  position: relative;
+  z-index: 2;
+  float:right;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.search-wrapper.active .input-holder .search-icon {
+  width: 50px;
+  height:50px;
+  margin: 10px;
+  border-radius: 30px;
+}
+.search-wrapper .input-holder .search-icon span {
+  width:22px;
+  height:22px;
+  display: inline-block;
+  vertical-align: middle;
+  position:relative;
+  transform: rotate(45deg);
+  transition: all .4s cubic-bezier(0.650, -0.600, 0.240, 1.650);
+}
+.search-wrapper.active .input-holder .search-icon span {
+  transform: rotate(-45deg);
+}
+.search-wrapper .input-holder .search-icon span::before, .search-wrapper .input-holder .search-icon span::after {
+  position: absolute; 
+  content:'';
+}
+.search-wrapper .input-holder .search-icon span::before {
+  width: 4px;
+  height: 11px;
+  left: 9px;
+  top: 18px;
+  border-radius: 2px;
+  background: #af701d;
+}
+.search-wrapper .input-holder .search-icon span::after {
+  width: 14px;
+  height: 14px;
+  left: 0px;
+  top: 0px;
+  border-radius: 16px;
+  border: 4px solid #af701d;
+}
+.search-wrapper .close {
+  position: absolute;
+  z-index: 1;
+  top:24px;
+  right:20px;
+  width:25px;
+  height:25px;
+  cursor: pointer;
+  transform: rotate(-180deg);
+  transition: all .3s cubic-bezier(0.285, -0.450, 0.935, 0.110);
+  transition-delay: 0.2s;
+}
+.search-wrapper.active .close {
+  right:-50px;
+  transform: rotate(45deg);
+  transition: all .6s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+  transition-delay: 0.5s;
+}
+.search-wrapper .close::before, .search-wrapper .close::after {
+  position:absolute;
+  content:'';
+  background: #af701d;
+  border-radius: 2px;
+}
+.search-wrapper .close::before {
+  width: 5px;
+  height: 25px;
+  left: 10px;
+  top: 0px;
+}
+.search-wrapper .close::after {
+  width: 25px;
+  height: 5px;
+  left: 0px;
+  top: 10px;
+}

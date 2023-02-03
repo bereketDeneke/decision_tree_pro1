@@ -1,3 +1,8 @@
+::selection{
+    background: none;
+    color: none;
+}
+
 .mf_diagram_controlNodeContent {
     box-shadow: rgba(0, 52, 102, 0.35) 4px 4px 4px;
     text-align: center;
@@ -52,12 +57,13 @@ td {
     margin-right: auto;
     margin-bottom: 20px;
     /* margin-top: 40px; */
-    width: 80%;
+    width: 90%;
     /* background-color: #648dae; */
     background-color: #d2b48c;
 }
 
 /* On mouse-over, add a deeper shadow */
-.card:hover {
+.card:hover, .card:active {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
+

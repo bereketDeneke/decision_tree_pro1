@@ -19,48 +19,47 @@ var zero = [];
 var vec;
 var bx = 50, by = 40;
 var diagram = null;
+let textArea = "";
 
-// $(document).ready(function () {
-// 	diagram = Diagram.create(document.getElementById("diagram"));
-// 	diagram.setBounds(new Rect(0, 0, 500, 500));
-// });
-
-// console.log(str);
-
-
-
-var input1 = document.querySelector('input');
-var textarea = document.querySelector('textarea');
-let chooseTopic = document.getElementsByName('chooseTopic');
+// var input1 = document.querySelector('input');
+// var textarea = document.querySelector('textarea');
+// let chooseTopic = document.getElementsByClassName('chooseTopic');
 
 // This for loop gets the text input from the links provided by the radio choice button
-for(let i = 0; i < chooseTopic.length; i++) {
-	chooseTopic[i].addEventListener('change', () => {
-		if(chooseTopic[i].checked) {
-			$.get( chooseTopic[i].value, function( data ) {
-				var text = data;
-				textarea.value = text;
-			});
-		}
+
+function loadTree(element){
+	const URL = element.getAttribute('data-url');
+	$.get(URL, function( data ) {
+		textArea = data;
 	});
+	input();
 }
+// for(let i = 0; i < chooseTopic.length; i++) {
+// 	chooseTopic[i].addEventListener('click', () => {
+// 		let input = chooseTopic[i].querySelector('input');
+// 		$.get(input.value, function( data ) {
+// 			var text = data;
+// 			textarea.value = text;
+// 		});
+// 	});
+// }
 
-// This code allows the user to upload txt file. 
-input1.addEventListener('change', () => {
-	let files = input1.files;
-	if (files.length == 0) return;
+// // This code allows the user to upload txt file. 
+// input1.addEventListener('change', () => {
+// 	let files = input1.files;
+// 	if (files.length == 0) return;
 
-	const file = files[0];
-	let reader = new FileReader();
-	reader.onload = (e) => {
-		const file = e.target.result;
-		const lines = file.split(/\r\n|\n/);
-		textarea.value = lines.join('\n');
-	};
-	reader.onerror = (e) => alert(e.target.error.name);
+// 	const file = files[0];
+// 	let reader = new FileReader();
+// 	reader.onload = (e) => {
+// 		const file = e.target.result;
+// 		const lines = file.split(/\r\n|\n/);
+// 		textarea.value = lines.join('\n');
+// 	};
+// 	reader.onerror = (e) => alert(e.target.error.name);
 
-	reader.readAsText(file);
-});
+// 	reader.readAsText(file);
+// });
 
 // This function converts the text input to a general tree 
 // It also has a debugger, and it will alert the user if any bugs exist
@@ -71,21 +70,25 @@ input1.addEventListener('change', () => {
 // arr is the 2d array represents a general tree where index is parent id and values are children id
 // set ifSearch to 'no' so that the next page will only show the root node
 function input() {
-	// document.getElementById("undo").style.display = "inline-block";
-	str = $('#input').val().split("\n"); //we will delete the hyphens later
-	str_hyphens = $('#input').val().split("\n"); 	
+	// check if the textarea is empty or not
+	if(textArea.length <= 0) {	
+		// TODO: alert the user to choose topic before continuing
+		return false;
+	}
+
+	const canvas = document.getElementById('diagram');
+	const ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, ctx.width, ctx.height);
+	const parentElement = document.querySelector('.mf_diagram_controlNodesContainer');
+	const previous_nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+
+	previous_nodes.forEach(node=>{
+		parentElement.removeChild(node);
+	})
+
+	str = textArea.split("\n"); //we will delete the hyphens later
+	str_hyphens = textArea.split("\n"); 	
 	
-	// let fileURL = document.querySelector('#input').value;
-	// console.log(fileURL);
-	// let extension = fileURL.substring(fileURL.lastIndexOf('.'));
-	// console.log(extension);
-
-	// if(extension == 'cart') {
-	// 	console.log("reach cart");
-	// 	str = cart(str);
-	// 	str_hyphens = str;
-	// }
-
 	if(str[0].includes("CART")) {
 		str = cart(str);
 		str_hyphens = str;
@@ -93,8 +96,8 @@ function input() {
 
 	n = str.length;
 
-	console.log("test str in hos: " + str);
-	console.log("test str_hyphens in hos: " + str_hyphens);
+	// console.log("test str in hos: " + str);
+	// console.log("test str_hyphens in hos: " + str_hyphens);
 	vec = new Array(n);
 	obj = new Array(n);
 	for (var i = 0; i < obj.length; i++) {
@@ -234,25 +237,15 @@ function input() {
 	localStorage.setItem("ifSearch", JSON.stringify('no'));
 	//document.location.href = "tree.html";
 	if(error == '') {
-		window.location.href = "tree.html";
+		render_tree();
 	}
 	else {
-		jump(error_loc);
+		// jump(error_loc);
 		alert("INPUT ERROR: " + error);
 	}
 
 }
 
-// This function can jump to the line with bug
-// It is called by the 'input' function, so it is called when users click the submit button
-// Input: the line number with bug
-function jump(line) {
-  var ta = document.getElementById("input");
-  // For unknown reason, the calculation of lineHeight is not very accurate, so I added 0.9525 as a hyperparameter.
-  var lineHeight = (ta.clientHeight / ta.rows) * 0.9525;
-  var jump = (line - 1) * lineHeight;
-  ta.scrollTop = jump;
-}
 
 // When the input has the keyword 'CART' in the first line, the function will parse the format of the CART text output from sciki-learn 
 // into valid hyphens format

@@ -43,7 +43,23 @@ let path_subtree = [];
 let pathAndSubtree = [];
 let currTreeIdList = [];
 var index = 2; // for auto selecting the answers according to path, it is used in the next option function
-rootNode();
+
+
+function render_tree(){
+    rootNode();
+    dragElement(document.getElementById("mydiv"));
+    
+    var copyBobBtn = document.querySelector('.js-copy-bob-btn'),
+    copyJaneBtn = document.querySelector('.js-copy-jane-btn');
+
+    copyBobBtn.addEventListener('click', function(event) {
+    copyTextToClipboard('Bob');
+    });
+
+    copyJaneBtn.addEventListener('click', function(event) {
+    copyTextToClipboard('Jane');
+    });
+}
 
 // rootNode generates the root node
 // rootNode is called whenever the page is loaded
@@ -53,7 +69,7 @@ function rootNode() {
     diagram = Diagram.create(document.getElementById("diagram"));
     var Behavior = MindFusion.Diagramming.Behavior;
     diagram.setBehavior(Behavior.SelectOnly);
-    // diagram.setBounds(new Rect(0, 0, 500, 500));
+    diagram.setBounds(new Rect(0, 0, 500, 500));
     diagram.setVirtualScroll(true);
     // create an Overview component that wraps the "overview" canvas
     // var overview = MindFusion.Diagramming.Overview.create(document.getElementById("overview"));
@@ -101,29 +117,34 @@ function rootNode() {
         // document.getElementById('d1').style.paddingBottom = '25px';
     }
 
-    if (arr[id].length > 0 && arr[id].length <= 5) {
-        var val = `<div id="d1"><p>` + s + `</p></div>` + `<div><select data-interactive="true" data-event-change="selectClick" name= "${id}" class="select" id= "${id}"><option value="none" selected></option>`;
+    let {val, ifCheckbox} = decision_node(arr, id, s, false, true);
+    // if (arr[id].length > 0 && arr[id].length <= 5) {
+    //     var val = `<div id="d1" style="
+    //     background-color: #f3b058 !important;
+    //     width: 100%;
+    //     margin-bottom: 7px;
+    //     "><p>` + s + `</p></div>` + `<div><select data-interactive="true" data-event-change="selectClick" name= "${id}" class="select" id= "${id}"><option value="none" selected></option>`;
         
-        for (var i = 0; i < arr[id].length; i++) {
+    //     for (var i = 0; i < arr[id].length; i++) {
 
-            len1 = str[arr[id][i]].search(',');
-            s1 = str[arr[id][i]].substring(3, len1);
-            val += `<option value=` + arr[id][i] + `>` + s1 + `</option>`;
-        }
-        val += `<option value="NotSure">NotSure</option>`;
-        val += `</select></div>`;
-    }
-    else if(arr[id].length > 5) {
-        var val = `<div id="d1"><p>` + s + `</p></div>`;
+    //         len1 = str[arr[id][i]].search(',');
+    //         s1 = str[arr[id][i]].substring(3, len1);
+    //         val += `<option value=` + arr[id][i] + `>` + s1 + `</option>`;
+    //     }
+    //     val += `<option value="NotSure">NotSure</option>`;
+    //     val += `</select></div>`;
+    // }
+    // else if(arr[id].length > 5) {
+    //     var val = `<div id="d1"><p>` + s + `</p></div>`;
         
-        for (var i = 0; i < arr[id].length; i++) {
-            len1 = str[arr[id][i]].search(',');
-            s1 = str[arr[id][i]].substring(3, len1);
-            val += '<input type="checkbox" name="topics" value="' + arr[id][i] + '" />' + s1 + '<br />';                    
-        }
+    //     for (var i = 0; i < arr[id].length; i++) {
+    //         len1 = str[arr[id][i]].search(',');
+    //         s1 = str[arr[id][i]].substring(3, len1);
+    //         val += '<input type="checkbox" name="topics" value="' + arr[id][i] + '" />' + s1 + '<br />';                    
+    //     }
 
-        val += '<button class="btn btn-primary" onclick="selectClick()">Submit</button>';
-    }
+    //     val += '<button class="btn btn-primary" onclick="selectClick()">Submit</button>';
+    // }
 
     // console.log("check val: " + val);
     node.setTemplate(val);
@@ -261,7 +282,7 @@ function selectClick(e, sender) {
 // No return output
 function nextoption(id, originNode) {
     currTreeIdList.push(parseInt(id));
-    let ifCheckbox = false;
+    let ifCheckbox_1 = false;
     var node = new MindFusion.Diagramming.ControlNode(diagram);
     let len = str[id].search(',');
     let s = str[id].substring(len + 1, str[id].length);
@@ -327,31 +348,33 @@ function nextoption(id, originNode) {
 
             console.log("check s in get_sql_result: " + s);
             console.log("check id in nextoption: " + id);
-            var val = `<div id="d1"><p>` + s + `</p></div>`;
-            if (arr[id].length > 0 && arr[id].length <= 5) {
-                val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${id}" class="select" id= "${id}"><option value="none" selected></option>`;
-                for (var i = 0; i < arr[id].length; i++) {
+            
+            let {val, ifCheckbox} = decision_node(arr, id, s, ifCheckbox_1, true);
+            // var val = `<div id="d1"><p>` + s + `</p></div>`;
+            // if (arr[id].length > 0 && arr[id].length <= 5) {
+            //     val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${id}" class="select" id= "${id}"><option value="none" selected></option>`;
+            //     for (var i = 0; i < arr[id].length; i++) {
                     
-                    len1 = str[arr[id][i]].search(',');
-                    s1 = str[arr[id][i]].substring(3, len1);
-                    val += `<option value=` + arr[id][i] + `>` + s1 + `</option>`;
-                }
-                val += `<option value="NotSure">NotSure</option>`;
-                val += `</select></div>`;
-            }
-            else if(arr[id].length > 5) {
-                ifCheckbox = true;
-                val += '<form action="#" method="post" id="checkbox_form"">';
-                for (var i = 0; i < arr[id].length; i++) {
-                    len1 = str[arr[id][i]].search(',');
-                    s1 = str[arr[id][i]].substring(3, len1);
-                    val += `<input type="checkbox" name="option" class="checkbox" value="` + arr[id][i] + `" />` + s1 + `<br />`;                    
-                }
-                // onclick="checkboxAnswers(' + id + ',' + originNode + ');
-                val += '<button type="button" id = cb-button class="btn btn-primary" >Submit</button>';
+            //         len1 = str[arr[id][i]].search(',');
+            //         s1 = str[arr[id][i]].substring(3, len1);
+            //         val += `<option value=` + arr[id][i] + `>` + s1 + `</option>`;
+            //     }
+            //     val += `<option value="NotSure">NotSure</option>`;
+            //     val += `</select></div>`;
+            // }
+            // else if(arr[id].length > 5) {
+            //     ifCheckbox = true;
+            //     val += '<form action="#" method="post" id="checkbox_form"">';
+            //     for (var i = 0; i < arr[id].length; i++) {
+            //         len1 = str[arr[id][i]].search(',');
+            //         s1 = str[arr[id][i]].substring(3, len1);
+            //         val += `<input type="checkbox" name="option" class="checkbox" value="` + arr[id][i] + `" />` + s1 + `<br />`;                    
+            //     }
+            //     // onclick="checkboxAnswers(' + id + ',' + originNode + ');
+            //     val += '<button type="button" id = cb-button class="btn btn-primary" >Submit</button>';
                 
-                val += '</form>';
-            }
+            //     val += '</form>';
+            // }
             
             node.setTemplate(val);
             node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -386,32 +409,33 @@ function nextoption(id, originNode) {
 
     }    
     else {
-        var val = `<div id="d1"><p>` + s + `</p></div>`;
-        if (arr[id].length > 0 && arr[id].length <= 5) {
-            val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${id}" class="select" id= "${id}"><option value="none" selected></option>`;
-            for (var i = 0; i < arr[id].length; i++) {
+        let {val, ifCheckbox} = decision_node(arr, id, s, ifCheckbox_1, true);
+        // var val = `<div id="d1"><p>` + s + `</p></div>`;
+        // if (arr[id].length > 0 && arr[id].length <= 5) {
+        //     val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${id}" class="select" id= "${id}"><option value="none" selected></option>`;
+        //     for (var i = 0; i < arr[id].length; i++) {
                 
-                len1 = str[arr[id][i]].search(',');
-                s1 = str[arr[id][i]].substring(3, len1);
-                val += `<option value=` + arr[id][i] + `>` + s1 + `</option>`;
-            }
-            val += `<option value="NotSure">NotSure</option>`;
-            val += `</select></div>`;
-        }
-        else if(arr[id].length > 5) {
-            ifCheckbox = true;
-            val += '<form action="#" method="post" id="checkbox_form"">';
-            for (var i = 0; i < arr[id].length; i++) {
-                len1 = str[arr[id][i]].search(',');
-                s1 = str[arr[id][i]].substring(3, len1);
-                val += `<input type="checkbox" name="option" class="checkbox" value="` + arr[id][i] + `" />` + s1 + `<br />`;                    
-            }
-            // onclick="checkboxAnswers(' + id + ',' + originNode + ');
-            val += '<button type="button" id = cb-button class="btn btn-primary" >Submit</button>';
+        //         len1 = str[arr[id][i]].search(',');
+        //         s1 = str[arr[id][i]].substring(3, len1);
+        //         val += `<option value=` + arr[id][i] + `>` + s1 + `</option>`;
+        //     }
+        //     val += `<option value="NotSure">NotSure</option>`;
+        //     val += `</select></div>`;
+        // }
+        // else if(arr[id].length > 5) {
+        //     ifCheckbox = true;
+        //     val += '<form action="#" method="post" id="checkbox_form"">';
+        //     for (var i = 0; i < arr[id].length; i++) {
+        //         len1 = str[arr[id][i]].search(',');
+        //         s1 = str[arr[id][i]].substring(3, len1);
+        //         val += `<input type="checkbox" name="option" class="checkbox" value="` + arr[id][i] + `" />` + s1 + `<br />`;                    
+        //     }
+        //     // onclick="checkboxAnswers(' + id + ',' + originNode + ');
+        //     val += '<button type="button" id = cb-button class="btn btn-primary" >Submit</button>';
         
             
-            val += '</form>';
-        }
+        //     val += '</form>';
+        // }
         
         
         
@@ -546,18 +570,20 @@ function notSure(id, originNode) {
 
                     console.log("check s in get_sql_result: " + s);
                     let showResult = str[ids].substring(0, len + 2) + s;
-                    let val = `<div id="d1"><p>` + showResult + `</p></div>`;
-                    if (arr[ids].length > 0) {
-                        val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
-                        for (var j = 0; j < arr[ids].length; j++) {
+                    let {val, ifCheckbox} = decision_node(arr, ids, showResult);
+
+                    // let val = `<div id="d1"><p>` + showResult + `</p></div>`;
+                    // if (arr[ids].length > 0) {
+                    //     val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
+                    //     for (var j = 0; j < arr[ids].length; j++) {
     
-                            len1 = str[arr[ids][j]].search(',');
-                            s1 = str[arr[ids][j]].substring(3, len1);
-                            val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
-                        }
-                        val += `<option value="NotSure">NotSure</option>`;
-                        val += `</select></div>`;
-                    }
+                    //         len1 = str[arr[ids][j]].search(',');
+                    //         s1 = str[arr[ids][j]].substring(3, len1);
+                    //         val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
+                    //     }
+                    //     val += `<option value="NotSure">NotSure</option>`;
+                    //     val += `</select></div>`;
+                    // }
                     node.setTemplate(val);
                     node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
                     // node.setLocked(true);
@@ -598,32 +624,34 @@ function notSure(id, originNode) {
         
             }    
             else {            
-                var val = `<div id="d1"><p>` + str[ids] + `</p></div>`;
-                if (arr[ids].length > 0 && arr[id].length <= 5) {
-                    val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
-                    for (var j = 0; j < arr[ids].length; j++) {
+                let {val, ifCheckbox} = decision_node(arr, id, str[ids], true, true);
 
-                        len1 = str[arr[ids][j]].search(',');
-                        s1 = str[arr[ids][j]].substring(3, len1);
-                        val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
-                    }
-                    val += `<option value="NotSure">NotSure</option>`;
-                    val += `</select></div>`;
-                }
-                else if(arr[id].length > 5) {
-                    ifCheckbox = true;
-                    val += '<form action="#" method="post" id="checkbox_form"">';
-                    for (var i = 0; i < arr[id].length; i++) {
-                        len1 = str[arr[id][i]].search(',');
-                        s1 = str[arr[id][i]].substring(3, len1);
-                        val += `<input type="checkbox" name="option" class="checkbox" value="` + arr[id][i] + `" />` + s1 + `<br />`;                    
-                    }
-                    // onclick="checkboxAnswers(' + id + ',' + originNode + ');
-                    val += '<button type="button" id = cb-button class="btn btn-primary" >Submit</button>';
+                // var val = `<div id="d1"><p>` + str[ids] + `</p></div>`;
+                // if (arr[ids].length > 0 && arr[id].length <= 5) {
+                //     val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
+                //     for (var j = 0; j < arr[ids].length; j++) {
+
+                //         len1 = str[arr[ids][j]].search(',');
+                //         s1 = str[arr[ids][j]].substring(3, len1);
+                //         val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
+                //     }
+                //     val += `<option value="NotSure">NotSure</option>`;
+                //     val += `</select></div>`;
+                // }
+                // else if(arr[id].length > 5) {
+                //     ifCheckbox = true;
+                //     val += '<form action="#" method="post" id="checkbox_form"">';
+                //     for (var i = 0; i < arr[id].length; i++) {
+                //         len1 = str[arr[id][i]].search(',');
+                //         s1 = str[arr[id][i]].substring(3, len1);
+                //         val += `<input type="checkbox" name="option" class="checkbox" value="` + arr[id][i] + `" />` + s1 + `<br />`;                    
+                //     }
+                //     // onclick="checkboxAnswers(' + id + ',' + originNode + ');
+                //     val += '<button type="button" id = cb-button class="btn btn-primary" >Submit</button>';
                 
                     
-                    val += '</form>';
-                }
+                //     val += '</form>';
+                // }
 
                 node.setTemplate(val);
 
@@ -750,17 +778,19 @@ function showCheckbox(id, originNode, results) {
                         // str[ids]
                         // var val = `<div id="d1"><p>` + s + `</p></div>`;
                         let showResult = str[ids].substring(0, len + 2) + s;
-                        let val = `<div id="d1"><p>` + showResult + `</p></div>`;
-                        if (arr[ids].length > 0) {
-                            val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
-                            for (var j = 0; j < arr[ids].length; j++) {
-                                len1 = str[arr[ids][j]].search(',');
-                                s1 = str[arr[ids][j]].substring(3, len1);
-                                val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
-                            }
-                            val += `<option value="NotSure">NotSure</option>`;
-                            val += `</select></div>`;
-                        }
+                        let {val, ifCheckbox} = decision_node(arr, ids, showResult);
+
+                        // let val = `<div id="d1"><p>` + showResult + `</p></div>`;
+                        // if (arr[ids].length > 0) {
+                        //     val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
+                        //     for (var j = 0; j < arr[ids].length; j++) {
+                        //         len1 = str[arr[ids][j]].search(',');
+                        //         s1 = str[arr[ids][j]].substring(3, len1);
+                        //         val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
+                        //     }
+                        //     val += `<option value="NotSure">NotSure</option>`;
+                        //     val += `</select></div>`;
+                        // }
                         node.setTemplate(val);
 
                         node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -800,17 +830,18 @@ function showCheckbox(id, originNode, results) {
                     }
                 }
                 else {
-                    var val = `<div id="d1"><p>` + str[ids] + `</p></div>`;
-                    if (arr[ids].length > 0) {
-                        val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
-                        for (var j = 0; j < arr[ids].length; j++) {
-                            len1 = str[arr[ids][j]].search(',');
-                            s1 = str[arr[ids][j]].substring(3, len1);
-                            val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
-                        }
-                        val += `<option value="NotSure">NotSure</option>`;
-                        val += `</select></div>`;
-                    }
+                    let {val, ifCheckbox} = decision_node(arr, ids, str[ids]);
+                    // var val = `<div id="d1"><p>` + str[ids] + `</p></div>`;
+                    // if (arr[ids].length > 0) {
+                    //     val += `<div><select data-interactive="true" data-event-change="selectClick" name= "${ids}" id= "${ids}"><option value="none" selected></option>`;
+                    //     for (var j = 0; j < arr[ids].length; j++) {
+                    //         len1 = str[arr[ids][j]].search(',');
+                    //         s1 = str[arr[ids][j]].substring(3, len1);
+                    //         val += `<option value=` + arr[ids][j] + `>` + s1 + `</option>`;
+                    //     }
+                    //     val += `<option value="NotSure">NotSure</option>`;
+                    //     val += `</select></div>`;
+                    // }
                     node.setTemplate(val);
 
                     node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -1263,9 +1294,6 @@ function checkboxAnswers() {
 
 }
 
-
-dragElement(document.getElementById("mydiv"));
-
 // This function makes the search box draggable
 // It will be called when users click the search box
 // Input: the html element of the search box
@@ -1488,18 +1516,6 @@ function fallbackCopyTextToClipboard(text) {
       console.error('Async: Could not copy text: ', err);
     });
   }
-  
-  var copyBobBtn = document.querySelector('.js-copy-bob-btn'),
-    copyJaneBtn = document.querySelector('.js-copy-jane-btn');
-  
-  copyBobBtn.addEventListener('click', function(event) {
-    copyTextToClipboard('Bob');
-  });
-  
-  
-  copyJaneBtn.addEventListener('click', function(event) {
-    copyTextToClipboard('Jane');
-  });
 
 function atLeastOneRadio() {
     return ($('input[type=radio]:checked').length > 0);
