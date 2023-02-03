@@ -106,32 +106,4 @@ function openModal(header){
     }
     modal.canDismiss = false;
     modal.isOpen = true;
-    // const body = document.querySelector('body');
-    // const overlay = document.createElement('div');    
-    // const center_content = document.createElement('center');
-
-    // overlay.style = `
-    //     position:absolute; 
-    //     background-color:rgb(71 66 66 / 60%); 
-    //     width: 100%;
-    //     height: 100%;
-    //     z-index: 1000;
-    // `;
-    
-
-    // overlay.addEventListener('click', function(){
-    //     body.removeChild(overlay);
-    //     body.removeChild(center_content);
-    // }, true);
-
-    // body.appendChild(overlay);
-    // center_content.innerHTML = `
-    //     <div class='modal_container'>
-    //         <div class="question">
-    //             ${question}
-    //         </div>
-    //     </div>
-    // `;
-
-    // body.appendChild(center_content);
 }
