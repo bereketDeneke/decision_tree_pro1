@@ -121,24 +121,14 @@
       </ion-app>
       
       <ion-modal>
-        <ion-content>
+        <ion-content class="node_display">
           <ion-toolbar>
-            <ion-title>Modal</ion-title>
+            <ion-title>Current Node</ion-title>
             <ion-buttons slot="end">
               <ion-button color="light" onclick="dismiss()">Close</ion-button>
             </ion-buttons>
           </ion-toolbar>
-          <ion-header style="font-size:14px; margin: 2px; height:max-content; max-height:200px; overflow-y: auto;">
-              <ion-title>What are the clinical findings?</ion-title>
-          </ion-header>
-          <ion-select placeholder="response">
-            <ion-select-option value=""></ion-select-option>
-            <ion-select-option value="yes">yes</ion-select-option>
-            <ion-select-option value="meh">meh</ion-select-option>
-            <ion-select-option value="no">no</ion-select-option>
-            <ion-select-option value="not interested">not interested</ion-select-option>
-            <ion-select-option value="not sure">Not sure</ion-select-option>
-          </ion-select>
+          <div id="_question">What are the clinical findings?</div>
         </ion-content>
       </ion-modal>
 </body>
@@ -154,6 +144,45 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
 
 <style>
+.q_responses{
+  cursor: pointer;
+  border-radius: 0px;
+    background: #FFF;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    padding: 10px 5px;
+    margin: 0px 1px 13px;
+    -webkit-box-shadow: 0 3px 3px 0 rgb(0 0 0 / 14%), 0 1px 7px 0 rgb(0 0 0 / 12%), 0 3px 1px -1px rgb(0 0 0 / 20%);
+    box-shadow: 0 3px 3px 0 rgb(0 0 0 / 14%), 0 5px 7px 0 rgb(0 0 0 / 12%), 0 3px 1px -1px rgb(0 0 0 / 20%);
+}
+.checkbox{
+  padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    padding: 5px 0px 5px 25px;
+}
+
+.checkbox > input[type="checkbox"]{
+  position: absolute;
+  margin-left: -20px;
+}
+
+
+#_question{
+  background: #FFF;
+    color: #0099da;
+    font-weight: 600;
+    border-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    padding: 10px 5px;
+    margin: 0px !important;
+    border-bottom: #E9E9E9 1px solid;
+    -webkit-box-shadow: 0 0px 0px 0 rgb(0 0 0 / 14%), 0 0px 7px 0 rgb(0 0 0 / 12%), 0 0px 1px 0px rgb(0 0 0 / 20%);
+    box-shadow: 0 0px 0px 0 rgb(0 0 0 / 14%), 0 0px 7px 0 rgb(0 0 0 / 12%), 0 0px 1px 0px rgb(0 0 0 / 20%);
+    font-size: 16px;
+}
 ion-textarea.custom-textarea {
   --background: #373737;
   --color: #fff;
@@ -190,6 +219,8 @@ var modal = document.querySelector('ion-modal');
 function dismiss() {
   modal.isOpen = false;
   modal.canDismiss = true;
+  let update = document.querySelector('#curr_options');
+  update.remove();
   modal.dismiss();
 }
 

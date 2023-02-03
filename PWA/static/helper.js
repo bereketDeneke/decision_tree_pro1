@@ -2,6 +2,7 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
     let val = `<div id="d1" data-modal-id="${id}" style="
                     background-color: #f3b058 !important;
                     width: 100%;
+                    cursor: pointer;
                     margin-bottom: 7px;" onclick=openModal(this)>
                     <p> ${s} </p>
                 </div>`;
@@ -46,23 +47,49 @@ function openModal(header){
     const node = header.parentNode;
     const id = header.getAttribute('data-modal-id'); 
     const question = header.textContent;
-    let response = node.querySelector('select');
+    let pResponse = node.querySelector('select'); // possible responses for the question
     let is_form = false;
 
-    if(response == null){
+    if(pResponse == null){
         is_form = true;
-        response = node.querySelector('form'); 
-        response = Array.from(response.querySelectorAll('.checkbox'));
-        response = response.map( x => [x.querySelector('input').value, x.textContent.trim()]);
+        pResponse = node.querySelector('form'); 
+        pResponse = Array.from(pResponse.querySelectorAll('.checkbox'));
+        pResponse = pResponse.map( x => [x.querySelector('input').value, x.textContent.trim()]);
     }else{
-        response = Array.from(response.querySelectorAll('option'));
-        response = response.map( x => [x.value, x.textContent.trim()]);
+        pResponse = Array.from(pResponse.querySelectorAll('option'));
+        pResponse = pResponse.map( x => [x.value, x.textContent.trim()]);
     }
-    // console.log(question, response);
 
-    // construct the UI
-    // console.log(modal.isOpen);
-    // modal.open();
+    // UI
+    const question_el = document.querySelector('#_question');
+    const modal_container = document.querySelector('.node_display');
+    question_el.textContent = question;
+
+    if(!is_form){
+        const choices = document.createElement('div');
+        choices.setAttribute('class', 'q_responses');
+        choices.setAttribute('id', 'curr_options');
+
+        pResponse.forEach(response => {
+            if(response[1].length == "")
+                return;
+            let container = document.createElement('div');
+            container.setAttribute('class', 'checkbox');
+
+            let label = document.createElement('div');
+            label.setAttribute('class', 'answer');
+
+            let option = document.createElement('input');
+            option.setAttribute('type', 'checkbox');
+            option.setAttribute('value', response[0]);
+
+            label.textContent = response[1];
+            container.appendChild(option);
+            container.appendChild(label);
+            choices.appendChild(container);
+        });
+        modal_container.appendChild(choices);
+    }
     modal.canDismiss = false;
     modal.isOpen = true;
     // const body = document.querySelector('body');
