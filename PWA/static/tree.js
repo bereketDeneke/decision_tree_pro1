@@ -927,10 +927,10 @@ function input_search() {
     result = keywordSearch(keyword);
 
     if(result.length == 0) {
-        alert("The box containing this keyword doesn't exist.");
+        Toast("The box containing this keyword doesn't exist.");
     }
     else if(keyword == '') {
-        alert("You did not input any keyword");
+        Toast("You did not input any keyword");
     }
     else if(result.length == 1) {
         let text = document.getElementById('result');
@@ -1031,7 +1031,7 @@ function submit(){
         // window.location.href = "tree.html"; 
     }
     else {
-        alert("Please choose one radio button");
+        Toast("Please choose one radio button");
     }
 }
 

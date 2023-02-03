@@ -75,7 +75,7 @@
                 <ion-buttons slot="start">
                   <ion-menu-toggle>
                     <ion-button>
-                      <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+                      <ion-icon slot="icon-only" color="" name="ellipsis-vertical-outline"></ion-icon>
                     </ion-button>
                   </ion-menu-toggle>
                 </ion-buttons>
@@ -138,6 +138,11 @@
             <ion-button color="light" onclick="dismiss()">submit</ion-button>
           </ion-buttons>
         </ion-modal>
+      
+      <!-- Toast notification -->
+      <div id="toast_container" class="">
+        <label for="msg"></label>
+      </div>
   </body>
 
 
@@ -153,6 +158,28 @@
   *::first-letter{
     text-transform: capitalize;
   } 
+
+  #toast_container{
+    left:35%;
+    top:30px;
+    position: fixed;
+    background-color: rgba(144, 186, 238, 0.295);
+    box-shadow:0 10px 25px rgba(124, 130, 141, 0.2);
+    padding: 3px;
+    border-radius: 8px;
+    opacity: 0;
+    width:0px;
+    height:0px;
+    transition: all 1s linear;
+  }
+
+  #toast_container .active{
+    opacity: 1;
+    min-width: 105px;
+    width: fit-content;
+    min-height: 25px;
+    z-index: 100000;
+  }
 
   .q_responses{
     overflow: auto;
@@ -243,6 +270,15 @@
     modal.dismiss();
   }
 
+  async function Toast(msg) {
+    const notification = document.querySelector("#toast_container");
+    notification.setAttribute('class', 'active');
+    notification.textContent = msg;
+    setTimeout(()=>{
+      // remove the class 
+      notification.setAttribute('class', '');
+    }, 1500);
+  }
 
   </script>
 </html>

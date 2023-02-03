@@ -40,7 +40,7 @@ attach.addEventListener('change', () => {
 		cleanCanvas();
 		input();
 	};
-	reader.onerror = (e) => alert(e.target.error.name);
+	reader.onerror = (e) => Toast(e.target.error.name);
 	reader.readAsText(file);
 });
 
@@ -235,7 +235,7 @@ function input() {
 	}
 	else {
 		// jump(error_loc);
-		alert("INPUT ERROR: " + error);
+		Toast("INPUT ERROR: " + error);
 	}
 
 }
