@@ -30,6 +30,16 @@ function loadTree(element){
 	const URL = element.getAttribute('data-url');
 	$.get(URL, function( data ) {
 		textArea = data;
+
+		const canvas = document.getElementById('diagram');
+		const ctx = canvas.getContext('2d');
+		ctx.clearRect(0, 0, ctx.width, ctx.height);
+		const previous_nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+	
+		previous_nodes.forEach(node=>{
+			node.remove();
+		})
+	
 		input();
 	});
 }
@@ -48,16 +58,6 @@ function input() {
 		// TODO: alert the user to choose topic before continuing
 		return false;
 	}
-
-	const canvas = document.getElementById('diagram');
-	const ctx = canvas.getContext('2d');
-	ctx.clearRect(0, 0, ctx.width, ctx.height);
-	const previous_nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
-
-	previous_nodes.forEach(node=>{
-		node.remove();
-	})
-
 	str = textArea.split("\n"); //we will delete the hyphens later
 	str_hyphens = textArea.split("\n"); 	
 	
