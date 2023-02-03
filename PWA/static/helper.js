@@ -39,7 +39,6 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
     return {val, ifCheckbox};
 }
 
-
 function openModal(header){
     if(header == null || header == undefined) return false;
 
@@ -81,6 +80,7 @@ function openModal(header){
 
             let option = document.createElement('input');
             option.setAttribute('type', 'checkbox');
+            // option.setAttribute('onchange',);
             option.setAttribute('value', response[0]);
 
             label.textContent = response[1];
@@ -98,6 +98,7 @@ function openModal(header){
                     option.checked = false;
                 });
                 const curr_checkbox = elm.querySelector('input');
+                node.querySelector('select').value = curr_checkbox.value;
                 curr_checkbox.checked = true;
                 
             }, true);
