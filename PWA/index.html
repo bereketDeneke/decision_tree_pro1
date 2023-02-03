@@ -122,14 +122,28 @@
       
       <ion-modal>
         <ion-content class="node_display">
-          <ion-toolbar>
-            <ion-title>Current Node</ion-title>
-            <ion-buttons slot="end">
-              <ion-button color="light" onclick="dismiss()">Close</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-          <div id="_question">What are the clinical findings?</div>
+          <div class="header_cont">
+            <ion-toolbar>
+              <ion-title>Current Node</ion-title>
+              <ion-buttons slot="end">
+                <ion-button color="light" onclick="dismiss()">Close</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+            <div id="_question">What are the clinical findings?</div>
+          </div>
+          <!-- <ion-select placeholder="response" id="_choices">
+            <ion-select-option value=""></ion-select-option>
+            <ion-select-option value="yes">yes</ion-select-option>
+            <ion-select-option value="meh">meh</ion-select-option>
+            <ion-select-option value="no">no</ion-select-option>
+            <ion-select-option value="not interested">not interested</ion-select-option>
+            <ion-select-option value="not sure">Not sure</ion-select-option>
+          </ion-select> -->
         </ion-content>
+        
+        <ion-buttons slot="end">
+          <ion-button color="light" onclick="dismiss()">submit</ion-button>
+        </ion-buttons>
       </ion-modal>
 </body>
 </html>
@@ -144,17 +158,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
 
 <style>
+ *::first-letter{
+  text-transform: capitalize;
+ } 
+
 .q_responses{
+  overflow: auto;
   cursor: pointer;
   border-radius: 0px;
-    background: #FFF;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    padding: 10px 5px;
-    margin: 0px 1px 13px;
-    -webkit-box-shadow: 0 3px 3px 0 rgb(0 0 0 / 14%), 0 1px 7px 0 rgb(0 0 0 / 12%), 0 3px 1px -1px rgb(0 0 0 / 20%);
-    box-shadow: 0 3px 3px 0 rgb(0 0 0 / 14%), 0 5px 7px 0 rgb(0 0 0 / 12%), 0 3px 1px -1px rgb(0 0 0 / 20%);
+  background: #FFF;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  padding: 10px 5px;
+  margin: 0px 1px 13px;
 }
+
+ion-modal > .scroll-y{
+  overflow-y: hidden;
+}
+
 .checkbox{
   padding-top: 8px !important;
     padding-bottom: 8px !important;
@@ -168,6 +190,11 @@
   margin-left: -20px;
 }
 
+.header_cont{
+  z-index: 10000;
+  width: 100%;
+  /* position: fixed; */
+}
 
 #_question{
   background: #FFF;
@@ -178,9 +205,9 @@
     border-bottom-right-radius: 0px;
     padding: 10px 5px;
     margin: 0px !important;
-    border-bottom: #E9E9E9 1px solid;
-    -webkit-box-shadow: 0 0px 0px 0 rgb(0 0 0 / 14%), 0 0px 7px 0 rgb(0 0 0 / 12%), 0 0px 1px 0px rgb(0 0 0 / 20%);
-    box-shadow: 0 0px 0px 0 rgb(0 0 0 / 14%), 0 0px 7px 0 rgb(0 0 0 / 12%), 0 0px 1px 0px rgb(0 0 0 / 20%);
+    /* border-bottom: #E9E9E9 1px solid; */
+    /* -webkit-box-shadow: 0 0px 0px 0 rgb(0 0 0 / 14%), 0 0px 7px 0 rgb(0 0 0 / 12%), 0 0px 1px 0px rgb(0 0 0 / 20%); */
+    /* box-shadow: 0 0px 0px 0 rgb(0 0 0 / 14%), 0 0px 7px 0 rgb(0 0 0 / 12%), 0 0px 1px 0px rgb(0 0 0 / 20%); */
     font-size: 16px;
 }
 ion-textarea.custom-textarea {
@@ -195,20 +222,20 @@ ion-textarea.custom-textarea {
 
 
 ion-modal {
-    --height: 50%;
+    --height:50%;
     --border-radius: 16px;
     --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  }
+}
 
-  ion-modal::part(backdrop) {
-    background: rgba(209, 213, 219);
-    opacity: 1;
-  }
+ion-modal::part(backdrop) {
+  background: rgb(169, 172, 177);
+  opacity: 1;
+}
 
-  ion-modal ion-toolbar {
-    --background: rgb(14 116 144);
-    --color: white;
-  }
+ion-modal ion-toolbar {
+  --background: rgb(14 116 144);
+  --color: white;
+}
   
 </style>
 

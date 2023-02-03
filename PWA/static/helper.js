@@ -87,6 +87,20 @@ function openModal(header){
             container.appendChild(option);
             container.appendChild(label);
             choices.appendChild(container);
+
+            container.addEventListener('click', (elm)=>{
+                let parentNode = elm.target.parentNode.parentNode;
+                elm = elm.target.parentNode;
+                const options = parentNode.querySelectorAll('input');
+
+                console.log(options);
+                options.forEach(option=>{
+                    option.checked = false;
+                });
+                const curr_checkbox = elm.querySelector('input');
+                curr_checkbox.checked = true;
+                
+            }, true);
         });
         modal_container.appendChild(choices);
     }
