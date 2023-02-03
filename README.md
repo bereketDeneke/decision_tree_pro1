@@ -1,4 +1,14 @@
 ﻿# decision_tree_pro1
+Instruction:
+> Now the react native part is pending. Wherefore, to run the app follow the instruction down below:
+> Open the <code>PWA</code> folder.
+> Then open index.html on chrome browser
+> And to emulate different screen sizes follow the following steps:
+> Step 1 – Start Chrome
+> Step 2 – Go to navigation and open Developer tools (Menu > Tools > Developer Tools or press F12)
+> Step 3 – Click on setting icon on top-right side
+> Step 4 – Open Overrides section to enable Show ‘Emulation‘ view in console
+
 Current Progress Report:
 > User Interaction Modal: The user interaction modal has been updated to enhance user experience.
 
