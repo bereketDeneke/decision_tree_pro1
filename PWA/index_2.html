@@ -125,56 +125,20 @@
           <ion-toolbar>
             <ion-title>Modal</ion-title>
             <ion-buttons slot="end">
-              <ion-button color="light" onclick="modal.dismiss()">Close</ion-button>
+              <ion-button color="light" onclick="dismiss()">Close</ion-button>
             </ion-buttons>
           </ion-toolbar>
-          <ion-list>
-            <ion-item>
-              <ion-avatar slot="start">
-                <ion-img src="https://i.pravatar.cc/300?u=b" />
-              </ion-avatar>
-              <ion-label>
-                <h2>Connor Smith</h2>
-                <p>Sales Rep</p>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-avatar slot="start">
-                <ion-img src="https://i.pravatar.cc/300?u=a" />
-              </ion-avatar>
-              <ion-label>
-                <h2>Daniel Smith</h2>
-                <p>Product Designer</p>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-avatar slot="start">
-                <ion-img src="https://i.pravatar.cc/300?u=d" />
-              </ion-avatar>
-              <ion-label>
-                <h2>Greg Smith</h2>
-                <p>Director of Operations</p>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-avatar slot="start">
-                <ion-img src="https://i.pravatar.cc/300?u=e" />
-              </ion-avatar>
-              <ion-label>
-                <h2>Zoey Smith</h2>
-                <p>CEO</p>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-avatar slot="start">
-                <ion-img src="https://i.pravatar.cc/300?u=b" />
-              </ion-avatar>
-              <ion-label>
-                <h2>Connor Smith</h2>
-                <p>Sales Rep</p>
-              </ion-label>
-            </ion-item>
-          </ion-list>
+          <ion-header style="font-size:14px; margin: 2px; height:max-content; max-height:200px; overflow-y: auto;">
+              <ion-title>What are the clinical findings?</ion-title>
+          </ion-header>
+          <ion-select placeholder="response">
+            <ion-select-option value=""></ion-select-option>
+            <ion-select-option value="yes">yes</ion-select-option>
+            <ion-select-option value="meh">meh</ion-select-option>
+            <ion-select-option value="no">no</ion-select-option>
+            <ion-select-option value="not interested">not interested</ion-select-option>
+            <ion-select-option value="not sure">Not sure</ion-select-option>
+          </ion-select>
         </ion-content>
       </ion-modal>
 </body>
@@ -224,8 +188,9 @@ ion-modal {
 var modal = document.querySelector('ion-modal');
 
 function dismiss() {
+  modal.isOpen = false;
+  modal.canDismiss = true;
   modal.dismiss();
-  // modal.isOpen = false;
 }
 
 

@@ -62,7 +62,9 @@ function openModal(header){
 
     // construct the UI
     // console.log(modal.isOpen);
-    modal.open();
+    // modal.open();
+    modal.canDismiss = false;
+    modal.isOpen = true;
     // const body = document.querySelector('body');
     // const overlay = document.createElement('div');    
     // const center_content = document.createElement('center');
