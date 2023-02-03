@@ -13,6 +13,8 @@ What's next:
 
 > Implement keyword-based search functionality
 
+> API integration
+
 > Compile Progressive Web Application using React Native for both Android and iOS platforms
 
 > Enhance zooming GUI for improved user convenience
