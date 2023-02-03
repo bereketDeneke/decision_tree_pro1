@@ -1,6 +1,6 @@
 ﻿# decision_tree_pro1
 Instruction:
-> For now, you can't run the app using react-native framework. Wherefore, to run the app follow the instruction down below:
+> For now, you don't need to run the app using react-native framework. Wherefore, to run the app follow the instruction down below:
 > Open the <code>PWA</code> folder.
 > Then open index.html on chrome browser
 > And to emulate different screen sizes follow the following steps:
