@@ -108,3 +108,8 @@ function openModal(header){
     modal.canDismiss = false;
     modal.isOpen = true;
 }
+
+function upload_file(){
+    const attach = document.querySelector('#file_attach');
+    attach.click();
+}

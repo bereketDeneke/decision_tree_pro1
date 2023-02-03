@@ -24,22 +24,42 @@ let textArea = "";
 // var input1 = document.querySelector('input');
 // var textarea = document.querySelector('textarea');
 // let chooseTopic = document.getElementsByClassName('chooseTopic');
-
+let attach = document.querySelector('#file_attach');
 // This for loop gets the text input from the links provided by the radio choice button
+attach.addEventListener('change', () => {
+	let files = attach.files;
+	if (files.length == 0) return;
+
+	const file = files[0];
+	let reader = new FileReader();
+	textArea = [];
+	reader.onload = (e) => {
+		const file = e.target.result;
+		const lines = file.split(/\r\n|\n/);
+		textArea.push(lines.join('\n'));
+		cleanCanvas();
+		input();
+	};
+	reader.onerror = (e) => alert(e.target.error.name);
+	reader.readAsText(file);
+});
+
+function cleanCanvas(){
+	const canvas = document.getElementById('diagram');
+	const ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, ctx.width, ctx.height);
+	const previous_nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+
+	previous_nodes.forEach(node=>{
+		node.remove();
+	})
+}
+
 function loadTree(element){
 	const URL = element.getAttribute('data-url');
 	$.get(URL, function( data ) {
 		textArea = data;
-
-		const canvas = document.getElementById('diagram');
-		const ctx = canvas.getContext('2d');
-		ctx.clearRect(0, 0, ctx.width, ctx.height);
-		const previous_nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
-	
-		previous_nodes.forEach(node=>{
-			node.remove();
-		})
-	
+		cleanCanvas();
 		input();
 	});
 }
@@ -58,6 +78,8 @@ function input() {
 		// TODO: alert the user to choose topic before continuing
 		return false;
 	}
+
+	textArea = (typeof(textArea)=='string') ? textArea : textArea[0];
 	str = textArea.split("\n"); //we will delete the hyphens later
 	str_hyphens = textArea.split("\n"); 	
 	

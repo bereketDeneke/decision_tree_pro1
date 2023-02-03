@@ -109,8 +109,9 @@
                   <ion-icon name="chevron-up-circle"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="top">
-                  <ion-fab-button>
-                    <ion-icon name="attach-outline"></ion-icon>
+                  <ion-fab-button onclick="upload_file()">
+                    <ion-icon name="attach-outline" ></ion-icon>
+                    <input id='file_attach' type='file' accept="text/*" hidden/>
                   </ion-fab-button>
                   <ion-fab-button>
                     <ion-icon name="search"></ion-icon>
