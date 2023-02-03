@@ -26,40 +26,13 @@ let textArea = "";
 // let chooseTopic = document.getElementsByClassName('chooseTopic');
 
 // This for loop gets the text input from the links provided by the radio choice button
-
 function loadTree(element){
 	const URL = element.getAttribute('data-url');
 	$.get(URL, function( data ) {
 		textArea = data;
+		input();
 	});
-	input();
 }
-// for(let i = 0; i < chooseTopic.length; i++) {
-// 	chooseTopic[i].addEventListener('click', () => {
-// 		let input = chooseTopic[i].querySelector('input');
-// 		$.get(input.value, function( data ) {
-// 			var text = data;
-// 			textarea.value = text;
-// 		});
-// 	});
-// }
-
-// // This code allows the user to upload txt file. 
-// input1.addEventListener('change', () => {
-// 	let files = input1.files;
-// 	if (files.length == 0) return;
-
-// 	const file = files[0];
-// 	let reader = new FileReader();
-// 	reader.onload = (e) => {
-// 		const file = e.target.result;
-// 		const lines = file.split(/\r\n|\n/);
-// 		textarea.value = lines.join('\n');
-// 	};
-// 	reader.onerror = (e) => alert(e.target.error.name);
-
-// 	reader.readAsText(file);
-// });
 
 // This function converts the text input to a general tree 
 // It also has a debugger, and it will alert the user if any bugs exist
@@ -79,11 +52,10 @@ function input() {
 	const canvas = document.getElementById('diagram');
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, ctx.width, ctx.height);
-	const parentElement = document.querySelector('.mf_diagram_controlNodesContainer');
 	const previous_nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
 
 	previous_nodes.forEach(node=>{
-		parentElement.removeChild(node);
+		node.remove();
 	})
 
 	str = textArea.split("\n"); //we will delete the hyphens later

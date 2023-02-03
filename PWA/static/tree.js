@@ -47,8 +47,7 @@ var index = 2; // for auto selecting the answers according to path, it is used i
 
 function render_tree(){
     rootNode();
-    dragElement(document.getElementById("mydiv"));
-    
+
     var copyBobBtn = document.querySelector('.js-copy-bob-btn'),
     copyJaneBtn = document.querySelector('.js-copy-jane-btn');
 
@@ -59,6 +58,8 @@ function render_tree(){
     copyJaneBtn.addEventListener('click', function(event) {
     copyTextToClipboard('Jane');
     });
+
+    dragElement(document.getElementById("mydiv"));
 }
 
 // rootNode generates the root node
@@ -1154,7 +1155,8 @@ function submit(){
             }
         }
         localStorage.setItem("ifSearch", JSON.stringify('yes'));
-        window.location.href = "tree.html"; 
+        render_tree();
+        // window.location.href = "tree.html"; 
     }
     else {
         alert("Please choose one radio button");
@@ -1272,7 +1274,8 @@ function newInput(link, id, ifCheckbox, addIdForCheckbox) {
         localStorage.setItem("ifSearch", JSON.stringify('yes'));
         localStorage.setItem("ifNewInput", JSON.stringify('no'));
         localStorage.setItem("search_result", JSON.stringify(id));
-        window.location.href = "tree.html";
+        render_tree();
+        // window.location.href = "tree.html";
         
     });
     
@@ -1478,7 +1481,8 @@ function checkRadioButton() {
             }
         }
         localStorage.setItem("ifSearch", JSON.stringify('yes'));
-        window.location.href = "tree.html"; 
+        render_tree();
+        // window.location.href = "tree.html"; 
     }
 }
 

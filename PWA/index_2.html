@@ -120,7 +120,7 @@
         </ion-page>
       </ion-app>
       
-      <ion-modal trigger="open-modal">
+      <ion-modal>
         <ion-content>
           <ion-toolbar>
             <ion-title>Modal</ion-title>
@@ -225,6 +225,7 @@ var modal = document.querySelector('ion-modal');
 
 function dismiss() {
   modal.dismiss();
+  // modal.isOpen = false;
 }
 
 
