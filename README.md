@@ -8,8 +8,13 @@ Current Progress Report:
 
 What's next:
 > Implement file attachment functionality
+
 > Implement real-time updating of node information upon user submission through modal dialog
+
 > Implement keyword-based search functionality
+
 > Compile Progressive Web Application using React Native for both Android and iOS platforms
+
 > Enhance zooming GUI for improved user convenience
+
 > Conduct thorough testing and bug fixing to ensure software quality.
