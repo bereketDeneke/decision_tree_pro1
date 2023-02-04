@@ -1,9 +1,10 @@
 function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
+    let unique_id = "id_"+Math.floor(Math.random()*(10**12));
     let val = `<div id="d1" data-modal-id="${id}" style="
                     background-color: #f3b058 !important;
                     width: 100%;
                     cursor: pointer;
-                    margin-bottom: 7px;" onclick=openModal(this)>
+                    margin-bottom: 7px;" uid="${unique_id}" d onclick=openModal(this)>
                     <p> ${s} </p>
                 </div>`;
             
@@ -64,14 +65,18 @@ function openModal(header){
     const modal_container = document.querySelector('.node_display');
     question_el.textContent = question;
 
-    if(!is_form){
+    // if(!is_form){
         const choices = document.createElement('div');
         choices.setAttribute('class', 'q_responses');
         choices.setAttribute('id', 'curr_options');
 
         pResponse.forEach(response => {
-            if(response[1].length == "")
-                return;
+
+            // to exclude no choice from appearing on the modal
+            // uncomment the following if statement
+            // if(response[1].length == "")
+            //     return;
+
             let container = document.createElement('div');
             container.setAttribute('class', 'checkbox');
 
@@ -83,7 +88,7 @@ function openModal(header){
             // option.setAttribute('onchange',);
             option.setAttribute('value', response[0]);
 
-            label.textContent = response[1];
+            label.textContent = (response[1].length<=0)?"BLANK":response[1];
             container.appendChild(option);
             container.appendChild(label);
             choices.appendChild(container);
@@ -97,14 +102,25 @@ function openModal(header){
                 options.forEach(option=>{
                     option.checked = false;
                 });
-                const curr_checkbox = elm.querySelector('input');
-                node.querySelector('select').value = curr_checkbox.value;
-                curr_checkbox.checked = true;
+
+                if(!is_form){
+                    const curr_checkbox = elm.querySelector('input');
+                    const node_select_elm = node.querySelector('select');
+                    node_select_elm.value = curr_checkbox.value;
+                    node_select_elm.dispatchEvent(new Event('change'));
+                    curr_checkbox.checked = true;
+                }else{
+                    const curr_checkbox = elm.querySelector('input');
+                    const index = options.indexOf(curr_checkbox);
+                    curr_checkbox.checked = true;
+                    node.querySelectorAll('input')[index].checked = curr_checkbox.checked;
+                    checkboxAnswers();
+                }
                 
             }, true);
         });
         modal_container.appendChild(choices);
-    }
+    // }
     modal.canDismiss = false;
     modal.isOpen = true;
 }

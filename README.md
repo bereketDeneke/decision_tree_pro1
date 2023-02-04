@@ -1,5 +1,6 @@
 ﻿# decision_tree_pro1
 Instruction:
+> Run emulator emulator @Pixel_2_API_30
 > For now, you don't need to run the app using react-native framework. Wherefore, to run the app follow the instruction down below:
 > Open the <code>PWA</code> folder.
 > Then open index.html on chrome browser

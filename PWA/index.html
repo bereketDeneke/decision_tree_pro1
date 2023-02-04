@@ -98,7 +98,9 @@
                   <!-- The ZoomControl component is bound to the canvas element below -->
                   <div style="width: 50px; height: 300px; position: absolute; top: 85px; right: 35px;
                               width: 50px; height: 300px;z-index:3;">
-                      <canvas id="zoomer" width="50" height="300">
+                      <canvas id="zoomer" width="50" height="300" style="
+                      border-radius: 103px;
+                  ">
                       </canvas>
                   </div>
               </div>
@@ -122,21 +124,19 @@
         </ion-app>
         
         <ion-modal>
-          <ion-content class="node_display">
             <div class="header_cont">
               <ion-toolbar>
                 <ion-title>Current Node</ion-title>
                 <ion-buttons slot="end">
-                  <ion-button color="light" onclick="dismiss()">Close</ion-button>
+                  <ion-button color="light" onclick=dismiss()>Close</ion-button>
                 </ion-buttons>
               </ion-toolbar>
-              <div id="_question">What are the clinical findings?</div>
             </div>
+          <ion-content class="node_display">
+              <div id="_question">What are the clinical findings?</div>
           </ion-content>
           
-          <ion-buttons slot="end">
-            <ion-button color="light" onclick="dismiss()">submit</ion-button>
-          </ion-buttons>
+          <!-- <ion-button hidden onclick=next_modal()>Next</ion-button> -->
         </ion-modal>
       
       <!-- Toast notification -->
@@ -279,6 +279,9 @@
       notification.setAttribute('class', '');
     }, 1500);
   }
+
+  // draggable on stage
+
 
   </script>
 </html>
