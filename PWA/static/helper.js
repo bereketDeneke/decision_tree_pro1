@@ -4,7 +4,7 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
                     background-color: #f3b058 !important;
                     width: 100%;
                     cursor: pointer;
-                    margin-bottom: 7px;" uid="${unique_id}" d onclick=openModal(this)>
+                    margin-bottom: 7px;" uid="${unique_id}" onclick=openModal(this) ontouchstart=openModal(this)>
                     <p> ${s} </p>
                 </div>`;
             
@@ -74,8 +74,8 @@ function openModal(header){
 
             // to exclude no choice from appearing on the modal
             // uncomment the following if statement
-            // if(response[1].length == "")
-            //     return;
+            if(response[1].length == "")
+                return;
 
             let container = document.createElement('div');
             container.setAttribute('class', 'checkbox');
@@ -84,7 +84,7 @@ function openModal(header){
             label.setAttribute('class', 'answer');
 
             let option = document.createElement('input');
-            option.setAttribute('type', 'checkbox');
+            option.setAttribute('type', 'radio');
             // option.setAttribute('onchange',);
             option.setAttribute('value', response[0]);
 
@@ -98,7 +98,6 @@ function openModal(header){
                 elm = elm.target.parentNode;
                 const options = parentNode.querySelectorAll('input');
 
-                console.log(options);
                 options.forEach(option=>{
                     option.checked = false;
                 });
@@ -107,13 +106,16 @@ function openModal(header){
                     const curr_checkbox = elm.querySelector('input');
                     const node_select_elm = node.querySelector('select');
                     node_select_elm.value = curr_checkbox.value;
-                    node_select_elm.dispatchEvent(new Event('change'));
                     curr_checkbox.checked = true;
+                    dismiss();
+                    node_select_elm.dispatchEvent(new Event('change'));
                 }else{
-                    const curr_checkbox = elm.querySelector('input');
+                    const curr_checkbox = parentNode.querySelector('input');
                     const index = options.indexOf(curr_checkbox);
                     curr_checkbox.checked = true;
                     node.querySelectorAll('input')[index].checked = curr_checkbox.checked;
+                    
+                    dismiss();
                     checkboxAnswers();
                 }
                 
