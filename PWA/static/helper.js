@@ -36,8 +36,8 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
         val += '<button type="button" id = cb-button class="btn btn-primary" >Submit</button>';
         val += '</form>';
     }
-
-    return {val, ifCheckbox};
+    
+    return {val, ifCheckbox, unique_id};
 }
 
 function openModal(header){
@@ -130,4 +130,17 @@ function openModal(header){
 function upload_file(){
     const attach = document.querySelector('#file_attach');
     attach.click();
+}
+
+function smoothScroll(uid){
+    console.log(uid);
+    const scrollContainer = document.querySelector(`.row > div > div:last-child`);
+    const currentNode = document.querySelector(`[uid="${uid}"]`);
+
+    const position = currentNode.getBoundingClientRect();
+    const top_limit = position.y + currentNode.clientHeight;
+    const left_limit = position.x + currentNode.clientWidth;
+
+    scrollContainer.scrollTop = top_limit;
+    scrollContainer.scrollLeft = left_limit;
 }

@@ -108,7 +108,8 @@ function rootNode() {
         // document.getElementById('d1').style.paddingBottom = '25px';
     }
 
-    let {val, ifCheckbox} = decision_node(arr, id, s, false, true);
+    let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
+
     // if (arr[id].length > 0 && arr[id].length <= 5) {
     //     var val = `<div id="d1" style="
     //     background-color: #f3b058 !important;
@@ -218,8 +219,7 @@ function rootNode() {
     if(s.includes("DECISIONTREE") && ifNewInput == 'yes') {
         newInput(link, id);
     }
-
-
+    smoothScroll(unique_id);
 }
 
 
@@ -340,7 +340,7 @@ function nextoption(id, originNode) {
             console.log("check s in get_sql_result: " + s);
             console.log("check id in nextoption: " + id);
             
-            let {val, ifCheckbox} = decision_node(arr, id, s, ifCheckbox_1, true);
+            let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, ifCheckbox_1, true);
             
             node.setTemplate(val);
             node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -352,6 +352,8 @@ function nextoption(id, originNode) {
             diagram.addItem(node);
             createAnimatedLink(originNode, node);
             diagram.resizeToFitItems(10);
+
+            smoothScroll(unique_id);
         }
         
         get_sql_result(myCallback);
@@ -375,7 +377,7 @@ function nextoption(id, originNode) {
 
     }    
     else {
-        let {val, ifCheckbox} = decision_node(arr, id, s, ifCheckbox_1, true);
+        let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, ifCheckbox_1, true);
         
         node.setTemplate(val);
         node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -418,6 +420,8 @@ function nextoption(id, originNode) {
             newInput(link, id, false, 0);
             ifNewInput = JSON.parse(localStorage.getItem("ifNewInput"));
         }
+
+        smoothScroll(unique_id);
     }
 
 
@@ -508,7 +512,7 @@ function notSure(id, originNode) {
 
                     console.log("check s in get_sql_result: " + s);
                     let showResult = str[ids].substring(0, len + 2) + s;
-                    let {val, ifCheckbox} = decision_node(arr, ids, showResult);
+                    let {val, ifCheckbox, unique_id} = decision_node(arr, ids, showResult);
 
                     node.setTemplate(val);
                     node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -526,6 +530,8 @@ function notSure(id, originNode) {
                     diagram.arrange(layout);
                     diagram.resizeToFitItems(10);
                     // createAnimatedLink(originNode, node);
+
+                    smoothScroll(unique_id);
 
                 }
 
@@ -550,7 +556,7 @@ function notSure(id, originNode) {
         
             }    
             else {            
-                let {val, ifCheckbox} = decision_node(arr, id, str[ids], true, true);
+                let {val, ifCheckbox, unique_id} = decision_node(arr, id, str[ids], true, true);
 
                 node.setTemplate(val);
                 node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -568,7 +574,8 @@ function notSure(id, originNode) {
                 diagram.arrange(layout);
                 diagram.resizeToFitItems(10);
                 // createAnimatedLink(originNode, node);
-
+                
+                smoothScroll(unique_id);
                 // submit the checkbox answers
                 if(arr[id].length > 5) {
                     var o = document.getElementById("cb-button");
@@ -597,6 +604,7 @@ function notSure(id, originNode) {
 function showCheckbox(id, originNode, results) {
     var node = new MindFusion.Diagramming.ControlNode(diagram);
     var layout = new MindFusion.Graphs.TreeLayout();
+
     layout.root = node;
     layout.direction = MindFusion.Graphs.LayoutDirection.TopToBottom;
     layout.keepRootPosition = true;
@@ -676,7 +684,7 @@ function showCheckbox(id, originNode, results) {
                         // str[ids]
                         // var val = `<div id="d1"><p>` + s + `</p></div>`;
                         let showResult = str[ids].substring(0, len + 2) + s;
-                        let {val, ifCheckbox} = decision_node(arr, ids, showResult);
+                        let {val, ifCheckbox, unique_id} = decision_node(arr, ids, showResult);
 
                         node.setTemplate(val);
                         node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
@@ -694,6 +702,8 @@ function showCheckbox(id, originNode, results) {
                         // createAnimatedLink(originNode, node);
                         diagram.arrange(layout);
                         diagram.resizeToFitItems(10);
+
+                        smoothScroll(unique_id);
                     }
 
                     get_sql_result(myCallback);
@@ -716,7 +726,7 @@ function showCheckbox(id, originNode, results) {
                     }
                 }
                 else {
-                    let {val, ifCheckbox} = decision_node(arr, ids, str[ids]);
+                    let {val, ifCheckbox ,unique_id} = decision_node(arr, ids, str[ids]);
                     node.setTemplate(val);
                     node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
                     // node.setLocked(true);
@@ -734,6 +744,9 @@ function showCheckbox(id, originNode, results) {
                     diagram.arrange(layout);
                     diagram.resizeToFitItems(10);
 
+                    // scroll to the element
+                    smoothScroll(unique_id);
+
                     // create a larger decision tree for the new input file
                     if(s.includes("DECISIONTREE") && ifNewInput == 'yes') {
                         console.log("reach decisiontree");
@@ -742,7 +755,6 @@ function showCheckbox(id, originNode, results) {
                     }
                 
                 }
-
             }
         }
     }
