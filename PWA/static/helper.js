@@ -144,3 +144,40 @@ function smoothScroll(uid){
     scrollContainer.scrollTop = top_limit;
     scrollContainer.scrollLeft = left_limit;
 }
+
+function overview(uid){
+    const canvas = document.getElementById("diagram");
+    const canvas_dim = {X: canvas.clientWidth, Y: canvas.clientHeight};
+    const currentNode = document.querySelector(`[uid="${uid}"]`);
+
+    const position = currentNode.getBoundingClientRect();
+    
+    const top_limit = position.y + currentNode.clientHeight;
+    const left_limit = position.x + currentNode.clientWidth;
+
+    const ratio = 126/canvas_dim.X;
+
+    const overview = document.getElementById("overview");
+    overview.setAttribute("hidden", false);
+    const ctx = overview.getContext("2d");
+
+
+    ov = {
+        x: ratio * left_limit ,
+        y: ratio * top_limit,
+        w: ratio * currentNode.clientWidth,
+        h: ratio * currentNode.clientHeight,
+    }
+
+    ctx.beginPath();
+    ctx.rect(ov.x, ov.y, ov.w, ov.h);
+    ctx.stroke();
+}
+
+function update_overview(){
+    const nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+
+    nodes.forEach(node =>{
+        overview(node);
+    });
+}
