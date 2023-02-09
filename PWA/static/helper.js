@@ -141,8 +141,10 @@ function smoothScroll(uid){
     const top_limit = position.y + currentNode.clientHeight;
     const left_limit = position.x + currentNode.clientWidth;
 
-    scrollContainer.scrollTop = top_limit;
-    scrollContainer.scrollLeft = left_limit;
+    setTimeout(() => {
+        scrollContainer.scrollTop = top_limit;
+        scrollContainer.scrollLeft = left_limit;
+    }, 500);
 }
 
 function overview(uid){
