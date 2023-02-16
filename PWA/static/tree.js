@@ -263,6 +263,7 @@ function selectClick(e, sender) {
         printPath(parent_id, -1, false);
     }
 
+    update_overview();
 }
 
 

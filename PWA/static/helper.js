@@ -148,39 +148,52 @@ function smoothScroll(uid){
     }, 500);
 }
 
-function overview(currentNode, ctx){
+function draw_overview(currentNode, ctx, overview){
     const canvas = document.getElementById("diagram");
     const canvas_dim = {X: canvas.clientWidth, Y: canvas.clientHeight};
-    // const currentNode = document.querySelector(`[uid="${uid}"]`);
 
     const position = currentNode.getBoundingClientRect();
-    
-    const top_limit = position.y + currentNode.clientHeight;
-    const left_limit = position.x + currentNode.clientWidth;
+    let radius = 15;
+    const current_pos = {
+        X: ((overview.clientWidth/canvas_dim.X) * position.left),
+        Y: ((overview.clientHeight/canvas_dim.Y) * position.top),
 
-    const ratio = 126/canvas_dim.X;
+    };
 
-
-    ov = {
-        x: ratio * left_limit ,
-        y: ratio * top_limit,
-        w: 50 ,//* ratio,//ratio * currentNode.clientWidth,
-        h: 50 //* ratio,//ratio * currentNode.clientHeight,
-    }
-
+    ctx.fillStyle = "blue";	
     ctx.beginPath();
-    ctx.rect(ov.x, ov.y, ov.w, ov.h);
-    ctx.stroke();
+    ctx.arc(current_pos.X, current_pos.Y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    return new Konva.Circle({
+        x: current_pos.X,
+        y: current_pos.Y,
+        radius: radius,
+        fill: 'red',
+        stroke: 'black',
+    });
 }
 
 function update_overview(){
     const overview = document.getElementById("overview");
-    const ctx = overview.getContext("2d");
-    overview.setAttribute("hidden", false);
+    // let stage = new Konva.Stage({
+    //     container: 'overview',
+    //     width: overview.width,
+    //     height: overview.height,
+    //     draggable: true,
+    //   });
 
+    //   let layer = new Konva.Layer();
+    //   stage.add(layer);
+
+    const ctx = overview.getContext("2d");
+
+    ctx.beginPath();
+    ctx.clearRect(0, 0, overview.width, overview.height);
     const nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
-    ctx.rect(0, 0, overview.clientWidth, overview.clientHeight);
+    overview.removeAttribute("hidden");
     nodes.forEach(node =>{
-        overview(node);
+        // layer.add(draw_overview(node, 0, overview));
+        draw_overview(node, ctx, overview);
     });
 }

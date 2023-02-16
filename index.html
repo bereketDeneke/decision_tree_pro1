@@ -10,7 +10,8 @@
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
 
       <link rel="stylesheet" type="text/css" href="./PWA/static/tree.css" /> 
-      
+      <script src="https://unpkg.com/konva@8.4.2/konva.min.js"></script>
+
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <!-- Latest compiled and minified JavaScript -->
       <link rel="stylesheet" href="./PWA/static/modal.css" type="text/css" />
@@ -148,8 +149,11 @@
                 </div>
 
                 <!-- <div id="overview" style="z-index:1000000;  border-top-right-radius: 7px; background-color: #c0c0c0; padding: 0px; margin: 0px;"> -->
-                  <canvas id="inner_cont" style="">
-                  </canvas>
+                  <canvas id="overview" style=""> -->
+                   </canvas>
+                  <!-- <div id="overview">
+
+                  </div> -->
                 <!-- </div> -->
               </div>
           </ion-page>
@@ -178,8 +182,6 @@
         </div>
       </center>
   </body>
-
-
 
   <script src="./PWA/static/MindFusion.Common.js" type="text/javascript"></script>
   <script src="./PWA/static/MindFusion.Diagramming.js" type="text/javascript"></script>
@@ -217,8 +219,9 @@
     right:0px;
   }
 
-  #inner_cont{
+  #overview{
     flex:12;
+    /* box-shadow: 4px 4px 4px #4e4949af; */
     border-top-right-radius: 7px; 
     background-color: #c0c0c0; 
     width:100%;
@@ -407,7 +410,7 @@
       overview_cont.classList.remove("resize");
       overview_cont.classList.add("shrink");
     }
-
+    update_overview();
     is_maximized = Boolean(is_maximized^1);
   }
 
