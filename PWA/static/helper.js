@@ -113,6 +113,7 @@ function openModal(header){
                     const curr_checkbox = parentNode.querySelector('input');
                     const index = options.indexOf(curr_checkbox);
                     curr_checkbox.checked = true;
+                    console.log(index,  node.querySelectorAll('input'));
                     node.querySelectorAll('input')[index].checked = curr_checkbox.checked;
                     
                     dismiss();
@@ -147,10 +148,10 @@ function smoothScroll(uid){
     }, 500);
 }
 
-function overview(uid){
+function overview(currentNode, ctx){
     const canvas = document.getElementById("diagram");
     const canvas_dim = {X: canvas.clientWidth, Y: canvas.clientHeight};
-    const currentNode = document.querySelector(`[uid="${uid}"]`);
+    // const currentNode = document.querySelector(`[uid="${uid}"]`);
 
     const position = currentNode.getBoundingClientRect();
     
@@ -159,16 +160,12 @@ function overview(uid){
 
     const ratio = 126/canvas_dim.X;
 
-    const overview = document.getElementById("overview");
-    overview.setAttribute("hidden", false);
-    const ctx = overview.getContext("2d");
-
 
     ov = {
         x: ratio * left_limit ,
         y: ratio * top_limit,
-        w: ratio * currentNode.clientWidth,
-        h: ratio * currentNode.clientHeight,
+        w: 50 ,//* ratio,//ratio * currentNode.clientWidth,
+        h: 50 //* ratio,//ratio * currentNode.clientHeight,
     }
 
     ctx.beginPath();
@@ -177,8 +174,12 @@ function overview(uid){
 }
 
 function update_overview(){
-    const nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+    const overview = document.getElementById("overview");
+    const ctx = overview.getContext("2d");
+    overview.setAttribute("hidden", false);
 
+    const nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+    ctx.rect(0, 0, overview.clientWidth, overview.clientHeight);
     nodes.forEach(node =>{
         overview(node);
     });

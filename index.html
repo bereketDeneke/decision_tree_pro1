@@ -105,12 +105,6 @@
                       </canvas>
                   </div>
 
-                  <div style="z-index:1000000; opacity:0.5; position: absolute; left: 0px; bottom: 5px; right: 0px; width: 126px;
-                    height: 126px; border-top-right-radius: 7px; background-color: #c0c0c0; padding: 0px; margin: 0px;">
-                    <canvas id="overview" width="141" height="200" style="opacity:0.5; width: 126px; height: 126px;  padding: 0px; margin: 0px;">
-                    </canvas>
-                  </div>
-
                   <!-- <div style="z-index:1000000; position: absolute; top: 0px; bottom: 0px; right: 0px; width: 200px;
                     height: 200px; border-bottom: 1px solid #e2e4e7; background-color: #c0c0c0;">
                     <canvas id="overview" width="141" height="200" style="width: 141px; height: 200px; margin-left: 29.5px; margin-top: 0px;">
@@ -125,15 +119,41 @@
                   <ion-icon name="chevron-up-circle"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="top">
+
                   <ion-fab-button onclick="upload_file()">
                     <ion-icon name="attach-outline" ></ion-icon>
                     <input id='file_attach' type='file' accept="text/*" hidden/>
                   </ion-fab-button>
+
+                  <ion-fab-button onclick="show_overview(this, true)">
+                    <ion-icon name="locate-outline"></ion-icon>
+                  </ion-fab-button>
+
                   <ion-fab-button>
                     <ion-icon name="search"></ion-icon>
                   </ion-fab-button>
                 </ion-fab-list>
               </ion-fab>
+         
+                   
+              <div class="overview_container" hidden>
+                <div class="overview-btn">
+                  <ion-button color="danger" onclick="show_overview(this, false)">
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                  </ion-button>
+
+                  <ion-button onclick="resize(true)">
+                    <ion-icon name="scan-circle-outline"></ion-icon>
+                  </ion-button>
+                </div>
+                <div id="inner_cont" style="z-index:1000000; opacity:1; position: absolute; left: 0px; bottom: 5px; right: 0px; width: 126px;
+                  height: 126px; border-top-right-radius: 7px; background-color: #c0c0c0; padding: 0px; margin: 0px;">
+                  
+  
+                  <canvas id="overview" width="141" height="200" style="opacity:0.5; width: 126px; height: 126px;  padding: 0px; margin: 0px;">
+                  </canvas>
+                </div>
+              </div>
           </ion-page>
         </ion-app>
         
@@ -170,12 +190,27 @@
   <script src="./PWA/static/homepage.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
 
-  <style>
+<style>
   *::first-letter{
     text-transform: capitalize;
   } 
   
-  
+
+
+  .overview_container{
+    width:126px;
+    height:130px;
+    display: flex;
+  }
+
+  .overview-btn{
+    flex: 1;
+  }
+
+  #inner_cont{
+    flex:1;
+  }
+
   body{
     touch-action: none;
     width: 359px;
@@ -222,6 +257,72 @@
       opacity: 0;
       visibility: hidden;
 
+    }
+  }
+  /* .overview-btn{
+    position: fixed;
+    left:5;
+    bottom: 130px;
+    transition: 1s;
+  } */
+  .resize{
+    width:100% !important;
+    height:80% !important;
+    /* animation-duration: 4s;
+    animation-name: resize;
+    animation-direction: normal;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1; */
+
+  }
+
+  .resize_btn{
+    /* animation-duration: 4s;
+    animation-name: resizeBtn;
+    animation-direction: normal;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;   */
+    bottom: 83%;
+    right: 0;
+  }
+
+  .shrink{
+    width: 126px !important;
+    height: 126px !important;
+    /* animation-duration: 4s;
+    animation-name: resize;
+    animation-direction: reverse;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1; */
+  }
+
+  .shrink_btn{
+    /* animation-duration: 4s;
+    animation-name: resizeBtn;
+    animation-direction: reverse;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1; */
+    bottom: 130px;
+    left:5px;
+  }
+
+  @keyframes resizeBtn{
+    from{
+      bottom: 130px;
+      left:5px;
+    }to{  
+      bottom: 83%;
+      right: 0;
+    }
+  }
+
+  @keyframes resize{
+    from{
+      width:126px;
+      height:126px;
+    }to{
+      width:100%;
+      height:80%;
     }
   }
   .q_responses{
@@ -310,10 +411,11 @@
     margin: 50px;
   }
 }
-  </style>
+</style>
 
-  <script>
+<script>
   var modal = document.querySelector('ion-modal');
+  let is_maximized = false;
 
   function dismiss() {
     modal.isOpen = false;
@@ -321,6 +423,38 @@
     let update = document.querySelector('#curr_options');
     update.remove();
     modal.dismiss();
+  }
+
+  function show_overview(elem, is_visible) {
+    const overiew_cont = document.querySelector('.overview_container');
+    if (is_visible){
+      overiew_cont.classList.remove('fade');
+      overiew_cont.removeAttribute('hidden');
+    }else{
+      overiew_cont.classList.add('fade');
+      setTimeout(()=>{
+        overiew_cont.setAttribute('hidden', true);
+      }, 50);
+    }
+  }
+  
+  function resize() {
+    const overview_cont = document.querySelector(".overview_container #inner_cont");
+    const overview_btn = document.querySelector(".overview-btn");
+
+    if(!is_maximized){
+      overview_cont.classList.remove("shrink");
+      overview_btn.classList.remove("shrink_btn");
+      overview_cont.classList.add("resize");
+      overview_btn.classList.add("resize_btn");
+    }else{
+      overview_cont.classList.remove("resize");
+      overview_btn.classList.remove("resize_btn");
+      overview_cont.classList.add("shrink");
+      overview_btn.classList.add("shrink_btn");
+    }
+
+    is_maximized = Boolean(is_maximized^1);
   }
 
   async function Toast(msg) {
