@@ -78,8 +78,8 @@ function rootNode() {
     // overview.setDiagram(diagram);
 
     // create an ZoomControl component that wraps the "zoomer" canvas
-    var zoomer = MindFusion.Controls.ZoomControl.create(document.getElementById("zoomer"));
-    zoomer.setTarget(diagram);
+    // var zoomer = MindFusion.Controls.ZoomControl.create(document.getElementById("zoomer"));
+    // zoomer.setTarget(diagram);
 
     // diagram.setDefaultControlTemplate(defaultTemplate);
 
