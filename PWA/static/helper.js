@@ -4,7 +4,7 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
                     background-color: #f3b058 !important;
                     width: 100%;
                     cursor: pointer;
-                    margin-bottom: 7px;" uid="${unique_id}" ondblclick=openModal(this) ontouchstart=openModal(this)>
+                    margin-bottom: 7px;" uid="${unique_id}" onclick=openModal(this) ontouchend=openModal(this)>
                     <p> ${s} </p>
                 </div>`;
             
