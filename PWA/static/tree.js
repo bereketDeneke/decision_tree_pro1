@@ -264,6 +264,7 @@ function selectClick(e, sender) {
     }
 
     update_overview();
+    disable_canvas_interaction();
 }
 
 

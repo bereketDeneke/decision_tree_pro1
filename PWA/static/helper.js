@@ -134,7 +134,7 @@ function upload_file(){
 }
 
 function smoothScroll(uid){
-    console.log(uid);
+    // console.log(uid);
     const scrollContainer = document.querySelector(`.row > div > div:last-child`);
     const currentNode = document.querySelector(`[uid="${uid}"]`);
 
@@ -142,11 +142,45 @@ function smoothScroll(uid){
     const top_limit = position.y + currentNode.clientHeight;
     const left_limit = position.x + currentNode.clientWidth;
 
-    setTimeout(() => {
-        scrollContainer.scrollTop = top_limit;
-        scrollContainer.scrollLeft = left_limit;
-    }, 500);
+    // setTimeout(() => {
+    //     scrollContainer.scrollTop = top_limit;
+    //     scrollContainer.scrollLeft = left_limit;
+    // }, 500);
 }
+
+// // Record the initial mouse or touch position
+// let startPos;
+// window.addEventListener('mousedown', startScroll);
+// window.addEventListener('touchstart', startScroll);
+// window.addEventListener('mouseup', stopScroll);
+// window.addEventListener('touchend', stopScroll);
+
+
+// function startScroll(event) {
+//   startPos = event.pageY || event.touches[0].pageY;
+//   // Add event listeners to detect mouse or touch movement
+//   window.addEventListener('mousemove', moveScroll);
+//   window.addEventListener('touchmove', moveScroll);
+// }
+
+// function moveScroll(event) {
+//   event.preventDefault(); // Prevent default scrolling behavior
+//   const newPos = event.pageY || event.touches[0].pageY;
+//   const scrollDelta = (newPos - startPos) * -1; // Calculate distance moved
+
+//   if(scrollDelta > 20){
+//     const scrollContainer = document.querySelector(`.row > div > div:last-child`);
+//     setTimeout(() => {
+//         scrollContainer.scrollTop = event.pageY;
+//         scrollContainer.scrollLeft = event.pageX;
+//     }, 500);
+    
+//     startPos = newPos; // Update initial position
+//   }
+//   //   window.scrollBy(0, scrollDelta); // Scroll webpage
+// }
+
+
 
 function draw_overview(currentNode, ctx, overview){
     const canvas = document.getElementById("diagram");
@@ -196,4 +230,14 @@ function update_overview(){
         // layer.add(draw_overview(node, 0, overview));
         draw_overview(node, ctx, overview);
     });
+}
+
+
+function disable_canvas_interaction(){
+    const canvas = document.getElementById('diagram');
+    canvas.style.pointerEvents = 'none'; // Disable pointer events
+
+    // Remove all event listeners on the canvas
+    // canvasClone = canvas.cloneNode(true);
+    // canvas.parentNode.replaceChild(canvasClone, canvas);
 }
