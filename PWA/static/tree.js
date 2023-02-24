@@ -234,7 +234,6 @@ let path_search = [];
 // No output
 function selectClick(e, sender) {
     // console.log("reach");
-    
     var selectControl = sender.getContent().getElementsByTagName("select")[0];
     deleteNode(sender.id);
     
@@ -265,6 +264,7 @@ function selectClick(e, sender) {
 
     update_overview();
     disable_canvas_interaction();
+    active_node(sender.getContent());
 }
 
 

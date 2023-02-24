@@ -7,3 +7,9 @@
     --ion-color-primary-tint: #f3b058;
     --primary:#f3b058
   }
+  .mf_diagram_controlNodeContent {
+    transition: opacity 0.3s ease-in-out !important;
+  }
+  .active_node{ 
+    box-shadow: 0 0 10px 3px orange !important;
+  }

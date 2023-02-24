@@ -241,3 +241,12 @@ function disable_canvas_interaction(){
     // canvasClone = canvas.cloneNode(true);
     // canvas.parentNode.replaceChild(canvasClone, canvas);
 }
+
+function active_node(node){
+    const active = document.querySelector(".active_node");
+    if(active != null){
+        active.classList.remove('active_node');
+    }
+
+    node.classList.add('active_node');
+}
