@@ -82,7 +82,7 @@
                     </ion-button>
                   </ion-menu-toggle>
                 </ion-buttons>
-                <ion-title>Decision Tree</ion-title>
+                <!-- <ion-title>Decision Tree</ion-title> -->
               </ion-toolbar>
             </ion-header>
             <ion-content class="ion-padding">
@@ -127,8 +127,8 @@
                     <input id='file_attach' type='file' accept="text/*" hidden/>
                   </ion-fab-button>
 
-                  <ion-fab-button onclick="show_overview(this, true)">
-                    <ion-icon name="locate-outline"></ion-icon>
+                  <ion-fab-button onclick="fresh_start()">
+                    <ion-icon name="refresh-circle-outline"></ion-icon>
                   </ion-fab-button>
 
                   <ion-fab-button>
@@ -138,7 +138,7 @@
               </ion-fab>
          
                    
-              <div class="overview_container" hidden>
+              <!-- <div class="overview_container" hidden>
                 <div class="overview-btn">
                   <ion-button color="danger" onclick="show_overview(this, false)">
                     <ion-icon name="close-circle-outline"></ion-icon>
@@ -149,14 +149,14 @@
                   </ion-button>
                 </div>
 
-                <!-- <div id="overview" style="z-index:1000000;  border-top-right-radius: 7px; background-color: #c0c0c0; padding: 0px; margin: 0px;"> -->
-                  <canvas id="overview" style=""> -->
+                 <div id="overview" style="z-index:1000000;  border-top-right-radius: 7px; background-color: #c0c0c0; padding: 0px; margin: 0px;"> -->
+                 <!-- <canvas id="overview" style=""> 
                    </canvas>
-                  <!-- <div id="overview">
+                  <div id="overview">
 
                   </div> -->
                 <!-- </div> -->
-              </div>
+             <!--  </div> -->
           </ion-page>
         </ion-app>
         
@@ -386,11 +386,12 @@
     margin: 50px;
   }
 }
+
 </style>
 
 <script>
   var modal = document.querySelector('ion-modal');
-  let is_maximized = false;
+  // let is_maximized = false;
 
   function dismiss() {
     modal.isOpen = false;
@@ -400,31 +401,31 @@
     modal.dismiss();
   }
 
-  function show_overview(elem, is_visible) {
-    const overiew_cont = document.querySelector('.overview_container');
-    if (is_visible){
-      overiew_cont.classList.remove('fade');
-      overiew_cont.removeAttribute('hidden');
-    }else{
-      overiew_cont.classList.add('fade');
-      setTimeout(()=>{
-        overiew_cont.setAttribute('hidden', true);
-      }, 50);
-    }
-  }
+  // function show_overview(elem, is_visible) {
+  //   const overiew_cont = document.querySelector('.overview_container');
+  //   if (is_visible){
+  //     overiew_cont.classList.remove('fade');
+  //     overiew_cont.removeAttribute('hidden');
+  //   }else{
+  //     overiew_cont.classList.add('fade');
+  //     setTimeout(()=>{
+  //       overiew_cont.setAttribute('hidden', true);
+  //     }, 50);
+  //   }
+  // }
   
-  function resize() {
-    const overview_cont = document.querySelector(".overview_container");
-    if(!is_maximized){
-      overview_cont.classList.remove("shrink");
-      overview_cont.classList.add("resize");
-    }else{
-      overview_cont.classList.remove("resize");
-      overview_cont.classList.add("shrink");
-    }
-    update_overview();
-    is_maximized = Boolean(is_maximized^1);
-  }
+  // function resize() {
+  //   const overview_cont = document.querySelector(".overview_container");
+  //   if(!is_maximized){
+  //     overview_cont.classList.remove("shrink");
+  //     overview_cont.classList.add("resize");
+  //   }else{
+  //     overview_cont.classList.remove("resize");
+  //     overview_cont.classList.add("shrink");
+  //   }
+  //   update_overview();
+  //   is_maximized = Boolean(is_maximized^1);
+  // }
 
   async function Toast(msg) {
     const notification = document.querySelector("#toast_container");

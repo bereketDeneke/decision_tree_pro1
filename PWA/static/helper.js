@@ -182,55 +182,55 @@ function smoothScroll(uid){
 
 
 
-function draw_overview(currentNode, ctx, overview){
-    const canvas = document.getElementById("diagram");
-    const canvas_dim = {X: canvas.clientWidth, Y: canvas.clientHeight};
+// function draw_overview(currentNode, ctx, overview){
+//     const canvas = document.getElementById("diagram");
+//     const canvas_dim = {X: canvas.clientWidth, Y: canvas.clientHeight};
 
-    const position = currentNode.getBoundingClientRect();
-    let radius = 15;
-    const current_pos = {
-        X: ((overview.clientWidth/canvas_dim.X) * position.left),
-        Y: ((overview.clientHeight/canvas_dim.Y) * position.top),
+//     const position = currentNode.getBoundingClientRect();
+//     let radius = 15;
+//     const current_pos = {
+//         X: ((overview.clientWidth/canvas_dim.X) * position.left),
+//         Y: ((overview.clientHeight/canvas_dim.Y) * position.top),
 
-    };
+//     };
 
-    ctx.fillStyle = "blue";	
-    ctx.beginPath();
-    ctx.arc(current_pos.X, current_pos.Y, radius, 0, 2 * Math.PI);
-    ctx.fill();
+//     ctx.fillStyle = "blue";	
+//     ctx.beginPath();
+//     ctx.arc(current_pos.X, current_pos.Y, radius, 0, 2 * Math.PI);
+//     ctx.fill();
     
-    return new Konva.Circle({
-        x: current_pos.X,
-        y: current_pos.Y,
-        radius: radius,
-        fill: 'red',
-        stroke: 'black',
-    });
-}
+//     return new Konva.Circle({
+//         x: current_pos.X,
+//         y: current_pos.Y,
+//         radius: radius,
+//         fill: 'red',
+//         stroke: 'black',
+//     });
+// }
 
-function update_overview(){
-    const overview = document.getElementById("overview");
-    // let stage = new Konva.Stage({
-    //     container: 'overview',
-    //     width: overview.width,
-    //     height: overview.height,
-    //     draggable: true,
-    //   });
+// function update_overview(){
+//     const overview = document.getElementById("overview");
+//     // let stage = new Konva.Stage({
+//     //     container: 'overview',
+//     //     width: overview.width,
+//     //     height: overview.height,
+//     //     draggable: true,
+//     //   });
 
-    //   let layer = new Konva.Layer();
-    //   stage.add(layer);
+//     //   let layer = new Konva.Layer();
+//     //   stage.add(layer);
 
-    const ctx = overview.getContext("2d");
+//     const ctx = overview.getContext("2d");
 
-    ctx.beginPath();
-    ctx.clearRect(0, 0, overview.width, overview.height);
-    const nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
-    overview.removeAttribute("hidden");
-    nodes.forEach(node =>{
-        // layer.add(draw_overview(node, 0, overview));
-        draw_overview(node, ctx, overview);
-    });
-}
+//     ctx.beginPath();
+//     ctx.clearRect(0, 0, overview.width, overview.height);
+//     const nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+//     overview.removeAttribute("hidden");
+//     nodes.forEach(node =>{
+//         // layer.add(draw_overview(node, 0, overview));
+//         draw_overview(node, ctx, overview);
+//     });
+// }
 
 
 function disable_canvas_interaction(){
@@ -249,4 +249,9 @@ function active_node(node){
     }
 
     node.classList.add('active_node');
+}
+
+function fresh_start(){
+    cleanCanvas();
+    input();
 }

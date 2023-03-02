@@ -261,8 +261,7 @@ function selectClick(e, sender) {
         parent_id = sender.id;
         printPath(parent_id, -1, false);
     }
-
-    update_overview();
+    
     disable_canvas_interaction();
     active_node(sender.getContent());
 }
