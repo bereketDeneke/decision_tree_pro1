@@ -1,5 +1,6 @@
 let canvas = document.querySelector('.row');
 
+var zoomLevel = 100;
 // Store touch positions
 var touch1, touch2;
 // Add event listeners for touch events
