@@ -23,6 +23,7 @@ var EasingType = MindFusion.Animations.EasingType;
 var AnimationEvents = MindFusion.Animations.Events;
 // The bx and by control the size of the box.
 // var bx = 65, by = 25;
+var diagram;
 var bx = 87, by = 30;
 
 var currId = 0;
