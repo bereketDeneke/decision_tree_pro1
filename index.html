@@ -88,75 +88,49 @@
             <ion-content class="ion-padding">
               <!-- <h1>Main Content</h1> -->
               <!-- <ion-item> -->
-
                 <div class="row">
                   <div style="position: absolute; top: 20px; left:10px; right: 10px; bottom: 10px; overflow: auto;border: 25px;">
                       <canvas id="diagram" style="width: max-content; height: max-content;">
                           This page requires a browser that supports HTML 5 Canvas element.
                       </canvas>
                   </div>
-          
-                  <!-- </div> -->
-          
-                  <!-- The ZoomControl component is bound to the canvas element below -->
-                  <div hidden style="width: 50px; height: 300px; position: absolute; top: 85px; right: 35px;
-                              width: 50px; height: 300px;z-index:3;">
-                      <canvas id="zoomer" width="50" height="300" style="
-                      border-radius: 103px;
-                  ">
-                      </canvas>
+              </div>
+                  <div id="zoom_control" class="buttons">
+                    <button ion-button icon-only onclick="zoomIn(this)">
+                      <ion-icon name="add"></ion-icon>
+                    </button>
+                    <button ion-button icon-only onclick="zoomOut(this)">
+                      <ion-icon name="remove"></ion-icon>
+                    </button>
                   </div>
 
-                  <!-- <div style="z-index:1000000; position: absolute; top: 0px; bottom: 0px; right: 0px; width: 200px;
-                    height: 200px; border-bottom: 1px solid #e2e4e7; background-color: #c0c0c0;">
-                    <canvas id="overview" width="141" height="200" style="width: 141px; height: 200px; margin-left: 29.5px; margin-top: 0px;">
-                    </canvas>
-                  </div> -->
-
-              </div>
-              <!-- </ion-item> -->
-              
-              <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-                <ion-fab-button>
-                  <ion-icon name="chevron-up-circle"></ion-icon>
-                </ion-fab-button>
-                <ion-fab-list side="top">
-
-                  <ion-fab-button onclick="upload_file()">
-                    <ion-icon name="attach-outline" ></ion-icon>
+            </ion-content>
+          
+            <ion-footer>
+              <ion-toolbar>
+                <div class="button-group">
+                  <ion-searchbar (ionInput)="onSearch($event.target.value)" placeholder="Search" color="primary" searchIcon="search"></ion-searchbar>
+                  <ion-button onclick="upload_file()">
+                    <ion-icon name="attach-outline"></ion-icon>
                     <input id='file_attach' type='file' accept="text/*" hidden/>
-                  </ion-fab-button>
-
-                  <ion-fab-button onclick="fresh_start()">
+                  </ion-button>
+            
+                  <!-- <ion-button onclick="fresh_start()">
                     <ion-icon name="refresh-circle-outline"></ion-icon>
-                  </ion-fab-button>
-
-                  <ion-fab-button>
-                    <ion-icon name="search"></ion-icon>
-                  </ion-fab-button>
-                </ion-fab-list>
-              </ion-fab>
-         
-                   
-              <!-- <div class="overview_container" hidden>
-                <div class="overview-btn">
-                  <ion-button color="danger" onclick="show_overview(this, false)">
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                  </ion-button>
-
-                  <ion-button onclick="resize(true)">
-                    <ion-icon name="scan-circle-outline"></ion-icon>
-                  </ion-button>
+                  </ion-button> -->
                 </div>
-
-                 <div id="overview" style="z-index:1000000;  border-top-right-radius: 7px; background-color: #c0c0c0; padding: 0px; margin: 0px;"> -->
-                 <!-- <canvas id="overview" style=""> 
-                   </canvas>
-                  <div id="overview">
-
-                  </div> -->
-                <!-- </div> -->
-             <!--  </div> -->
+              </ion-toolbar>
+            </ion-footer>
+            
+            <style>
+              .button-group {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                margin-left: auto;
+              }
+            </style>
+            
           </ion-page>
         </ion-app>
         
@@ -210,52 +184,18 @@
   .row > div > div:last-child::-webkit-scrollbar { 
       display: none;  /* Safari and Chrome */
   }
-/* 
-  .overview_container{
-    width:126px;
-    height:156px;
-    display: flex;
-    flex-direction: column;
-    column-gap: 0;
-    justify-content: space-between;
-    bottom: 0px;
-    padding: 0px;
-    left:0px;
-    margin: 0px;
-    position:absolute;
-    transition: all .4s;
-    z-index: 10000;
-  }
-
-  .overview-btn{
-    float: right;
-    align-self: end;
-    right:0px;
-  }
-
-  #overview{
-    flex:12;
-    border-top-right-radius: 7px; 
-    background-color: #c0c0c0; 
-    width:100%;
-    height:100%; 
-    padding: 0px; 
-    margin: 0px;
-  } */
 
   body{
     touch-action: none;
     width: 359px;
     height: 633px;
     max-height: 100%;
-    /* border: 16px solid #705d5d; */
-    /* border-radius: 15px; */
     box-shadow: 0px 2px 8px rgb(2 8 20 / 10%), 0px 8px 16px rgb(2 8 20 / 8%);
   }
   
   .row > div > div:last-child{
     -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 
   }
 
@@ -376,9 +316,11 @@
     --color: white;
   }
   
-@media only screen and (max-width: 600px) {
+ @media only screen and (max-width: 600px) {
   body {
     margin: 0px;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -437,6 +379,31 @@
       notification.classList.remove('active');
     }, 8000);
   }
+
+  const searchInput = document.querySelector('ion-searchbar');
+  searchInput.addEventListener('ionChange', (e)=>{
+    let val = e.target.value;
+    let nodes = document.querySelectorAll('.mf_diagram_controlNodeContent');
+    nodes.forEach(node=>{
+      if(val.trim().length !== 0 && node.textContent.toLowerCase().includes(val.toLowerCase()))
+        node.classList.add('selected_item');
+      else
+        node.classList.remove('selected_item');
+    });
+  });
+
+
+  // //todo: add listeners for volume up and down events 
+  // function onLoad() {
+  //       document.addEventListener("deviceready", onDeviceReady, false);
+  //   }
+
+  //   function onDeviceReady() {
+  //       // Register the event listener
+  //       alert("deviceready");
+  //       document.addEventListener("volumeupbutton", zoomIn, false);
+  //       document.addEventListener("volumedownbutton", zoomOut, false);
+  //   }
 
   </script>
 </html>

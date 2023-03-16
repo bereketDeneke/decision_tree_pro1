@@ -69,10 +69,14 @@ function render_tree(){
 function rootNode() {
     currTreeIdList.push(0);
     diagram = Diagram.create(document.getElementById("diagram"));
-    // var Behavior = MindFusion.Diagramming.Behavior;
-    // diagram.setBehavior(Behavior.SelectOnly);
-    diagram.setBounds(new Rect(0, 0, 500, 500));
+    var Behavior = MindFusion.Diagramming.Behavior;
+    diagram.setBehavior(Behavior.SelectOnly);
+    // diagram.setBounds(new Rect(0, 0, 500, 500));
     diagram.setVirtualScroll(true);
+    
+    diagram.setAllowSelfLoops(false);
+    diagram.setAllowInplaceEdit(false)
+    // diagram.setAllowMultipleResize(false);
     
     // create an Overview component that wraps the "overview" canvas
     // var overview = MindFusion.Diagramming.Overview.create(document.getElementById("overview"));

@@ -1,36 +1,33 @@
-let canvas = document.querySelector('.row');
+let jump = 15
 
-var zoomLevel = 100;
-// Store touch positions
-var touch1, touch2;
-// Add event listeners for touch events
-canvas.addEventListener("pointerdown", function (e) {
-  if (e.pointerType === "touch") {
-    // Store the first touch position
-    touch1 = { x: e.clientX, y: e.clientY };
+function zoomIn(ele){
+  try{
+    let CurrentZoom = diagram.getZoomFactor();
+    if(CurrentZoom > 200 - jump){
+      ele.classList.add('deactivate');
+    }else{
+      CurrentZoom += jump;
+      diagram.setZoomLevel(CurrentZoom);
+      ele.classList.remove('deactivate');
+      document.querySelector('.deactivate').classList.remove('deactivate');
+    }
+  }catch(e){
+    //passs
   }
-});
+}
 
-canvas.addEventListener("pointermove", function (e) {
-  if (e.pointerType === "touch" && touch1 && touch2) {
-    // Calculate the distance between the two touches
-    var dist = Math.sqrt(
-      Math.pow(touch2.x - touch1.x, 2) + Math.pow(touch2.y - touch1.y, 2)
-    );
-
-    // Calculate the new zoom level
-    var newZoomLevel = zoomLevel * (dist / e.distance);
-
-    // Set the new zoom level
-    diagram.setZoomLevel(newZoomLevel);
+function zoomOut(ele){
+  try{
+    let CurrentZoom = diagram.getZoomFactor();
+    if(CurrentZoom < jump * 2){
+      ele.classList.add('deactivate');
+    }else{
+      CurrentZoom -= jump;
+      diagram.setZoomLevel(CurrentZoom);
+      ele.classList.remove('deactivate');
+      document.querySelector('.deactivate').classList.remove('deactivate');
+    }
+  }catch(e){
+    //passs
   }
-});
-
-canvas.addEventListener("pointerup", function (e) {
-  if (e.pointerType === "touch") {
-    // Reset the touch positions
-    touch1 = touch2 = null;
-    // Update the zoom level
-    zoomLevel = diagram.getZoomFactor();
-  }
-});
+}

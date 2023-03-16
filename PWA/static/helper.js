@@ -170,3 +170,4 @@ function fresh_start(){
     cleanCanvas();
     input();
 }
+
