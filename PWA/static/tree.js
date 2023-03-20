@@ -11,6 +11,7 @@ var ifSearch = JSON.parse(localStorage.getItem("ifSearch"));
 
 // var error = JSON.parse(localStorage.getItem("error"));
 var Diagram = MindFusion.Diagramming.Diagram;
+var DiagramView = MindFusion.Diagramming.DiagramView;
 var DiagramLink = MindFusion.Diagramming.DiagramLink;
 var ControlNode = MindFusion.Diagramming.ControlNode;
 
@@ -69,13 +70,22 @@ function render_tree(){
 function rootNode() {
     currTreeIdList.push(0);
     diagram = Diagram.create(document.getElementById("diagram"));
+    diagram.addEventListener("nodeActivated", function (sender, e) {
+        if (e.node !== diagram.selection.items[0]) {
+          diagram.activeItem = diagram.selection.items[0];
+        }
+      });
+      
     var Behavior = MindFusion.Diagramming.Behavior;
     diagram.setBehavior(Behavior.SelectOnly);
     // diagram.setBounds(new Rect(0, 0, 500, 500));
     diagram.setVirtualScroll(true);
-    
     diagram.setAllowSelfLoops(false);
-    diagram.setAllowInplaceEdit(false)
+    diagram.setAllowInplaceEdit(false);
+
+    // var diagramView = DiagramView.create(diagram._element);
+    // diagramView.diagram = diagram;
+    // diagramView.mouseWheelAction = MindFusion.Diagramming.MouseWheelAction.Zoom;
     // diagram.setAllowMultipleResize(false);
     
     // create an Overview component that wraps the "overview" canvas

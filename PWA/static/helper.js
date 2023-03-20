@@ -134,13 +134,13 @@ function upload_file(){
 }
 
 function smoothScroll(uid){
-    // console.log(uid);
-    const scrollContainer = document.querySelector(`.row > div > div:last-child`);
-    const currentNode = document.querySelector(`[uid="${uid}"]`);
+    console.log(uid);
+    // const scrollContainer = document.querySelector(`.row > div > div:last-child`);
+    // const currentNode = document.querySelector(`[uid="${uid}"]`);
 
-    const position = currentNode.getBoundingClientRect();
-    const top_limit = position.y + currentNode.clientHeight;
-    const left_limit = position.x + currentNode.clientWidth;
+    // const position = currentNode.getBoundingClientRect();
+    // const top_limit = position.y + currentNode.clientHeight;
+    // const left_limit = position.x + currentNode.clientWidth;
 
     // setTimeout(() => {
     //     scrollContainer.scrollTop = top_limit;
@@ -151,10 +151,6 @@ function smoothScroll(uid){
 function disable_canvas_interaction(){
     const canvas = document.getElementById('diagram');
     canvas.style.pointerEvents = 'none'; // Disable pointer events
-
-    // Remove all event listeners on the canvas
-    // canvasClone = canvas.cloneNode(true);
-    // canvas.parentNode.replaceChild(canvasClone, canvas);
 }
 
 function active_node(node){
