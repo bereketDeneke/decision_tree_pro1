@@ -56,11 +56,11 @@ let d1 = 1, rs = 1, rf = 0;
 
       //get the ratio
       rf = dist(event) / d1 * rs;
-      rf = diagram.getZoomFactor() - rf;;
+      rf = diagram.getZoomFactor() - rf;
       document.getElementById("Screen_Title").textContent = `Rf: ${rf} D1: ${d1} RS: ${rs}`;
       with(Math){
         // console.log('pt: ', rect);
-        map = min(max(1, rf), 200);
+        map = min(max(1, abs(rf)), 200);
         diagram.setZoomLevel(map);
         // diagram.zoomToRect(rect);
         rf = map;
