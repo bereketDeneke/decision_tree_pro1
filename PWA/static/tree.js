@@ -22,9 +22,10 @@ var Animation = MindFusion.Animations.Animation;
 var AnimationType = MindFusion.Animations.AnimationType;
 var EasingType = MindFusion.Animations.EasingType;
 var AnimationEvents = MindFusion.Animations.Events;
+var MouseWheelAction = MindFusion.Diagramming.MouseWheelAction;
 // The bx and by control the size of the box.
 // var bx = 65, by = 25;
-var diagram;
+var diagram, diagramView;
 var bx = 87, by = 30;
 
 var currId = 0;
@@ -69,7 +70,8 @@ function render_tree(){
 // No input or output
 function rootNode() {
     currTreeIdList.push(0);
-    diagram = Diagram.create(document.getElementById("diagram"));
+    diagramView = DiagramView.create(document.getElementById("diagram"));
+    diagram = diagramView.diagram;
     diagram.addEventListener("nodeActivated", function (sender, e) {
         if (e.node !== diagram.selection.items[0]) {
           diagram.activeItem = diagram.selection.items[0];
@@ -77,29 +79,17 @@ function rootNode() {
       });
       
     var Behavior = MindFusion.Diagramming.Behavior;
-    diagram.setBehavior(Behavior.SelectOnly);
-    // diagram.setBounds(new Rect(0, 0, 500, 500));
-    diagram.setVirtualScroll(true);
-    diagram.setAllowSelfLoops(false);
-    diagram.setAllowInplaceEdit(false);
+    diagramView.behavior = Behavior.SelectOnly;
+    diagramView.multiTouchDraw = true;
+    // diagramView.orientation = MindFusion.Graphs.Orientation.Vertical;
+    diagramView.mouseWheelAction = MouseWheelAction.Zoom;
+    // diagram.virtualScroll = true;
+    diagramView.allowInplaceEdit = false;
+    diagram.allowSelfLoops = false;
 
-    // var diagramView = DiagramView.create(diagram._element);
-    // diagramView.diagram = diagram;
-    // diagramView.mouseWheelAction = MindFusion.Diagramming.MouseWheelAction.Zoom;
-    // diagram.setAllowMultipleResize(false);
-    
-    // create an Overview component that wraps the "overview" canvas
-    // var overview = MindFusion.Diagramming.Overview.create(document.getElementById("overview"));
-    // overview.setDiagram(diagram);
-
-    // create an ZoomControl component that wraps the "zoomer" canvas
-    // var zoomer = MindFusion.Controls.ZoomControl.create(document.getElementById("zoomer"));
-    // zoomer.setTarget(diagram);
-
-    // diagram.setDefaultControlTemplate(defaultTemplate);
 
     var id = 0;
-    var node = new MindFusion.Diagramming.ControlNode(diagram);
+    var node = new MindFusion.Diagramming.ControlNode(diagramView);
     var len = str[id].search(',');
     let s = str[0].substring(len + 1, str[0].length);
 
@@ -122,8 +112,6 @@ function rootNode() {
         by = 30;
         // document.getElementById('d1').style.paddingBottom = '25px';
     }
-
-    let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
 
     // if (arr[id].length > 0 && arr[id].length <= 5) {
     //     var val = `<div id="d1" style="
@@ -154,9 +142,12 @@ function rootNode() {
     // }
 
     // console.log("check val: " + val);
-    node.setTemplate(val);
-    node.setBounds(new Rect(40, 10, bx, by));
-    node.setId(id);
+    // node.setTemplate(val);
+
+    let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
+    node.template = val;
+    node.bounds = new Rect(40, 10, bx, by);
+    node.id = id;
     diagram.addItem(node);
     diagram.resizeToFitItems(10);
 
@@ -290,7 +281,7 @@ function selectClick(e, sender) {
 function nextoption(id, originNode) {
     currTreeIdList.push(parseInt(id));
     let ifCheckbox_1 = false;
-    var node = new MindFusion.Diagramming.ControlNode(diagram);
+    var node = new MindFusion.Diagramming.ControlNode(diagramView);
     let len = str[id].search(',');
     let s = str[id].substring(len + 1, str[id].length);
 
@@ -355,20 +346,20 @@ function nextoption(id, originNode) {
 
             console.log("check s in get_sql_result: " + s);
             console.log("check id in nextoption: " + id);
+
+            let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
+            node.template = val;
+            node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+            node.id = id;
+            node.locked = true;
+            node.visible = true; // I changed it from false to true for auto selecting the answers according to path
             
-            let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, ifCheckbox_1, true);
-            
-            node.setTemplate(val);
-            node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
-            node.setId(id);
-            
-            node.setLocked(true);
-            node.setVisible(true); // I changed it from false to true for auto selecting the answers according to path
+            diagram.addItem(node);
+            diagram.resizeToFitItems(10);
             
             diagram.addItem(node);
             createAnimatedLink(originNode, node);
             diagram.resizeToFitItems(10);
-
             smoothScroll(unique_id);
         }
         
@@ -393,14 +384,13 @@ function nextoption(id, originNode) {
 
     }    
     else {
-        let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, ifCheckbox_1, true);
         
-        node.setTemplate(val);
-        node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
-        node.setId(id);
-        
-        node.setLocked(true);
-        node.setVisible(true); // I changed it from false to true for auto selecting the answers according to path
+        let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
+        node.template = val;
+        node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+        node.id = id; 
+        node.locked = true;
+        node.visible = true; // I changed it from false to true for auto selecting the answers according to path
         
         diagram.addItem(node);
         createAnimatedLink(originNode, node);
@@ -450,7 +440,7 @@ function nextoption(id, originNode) {
 // Input: id is the id of the current box, and originNode is the current box object.
 // No output
 function notSure(id, originNode) {
-    var node = new MindFusion.Diagramming.ControlNode(diagram);
+    var node = new MindFusion.Diagramming.ControlNode(diagramView);
     var layout = new MindFusion.Graphs.TreeLayout();
     layout.root = node;
     layout.direction = MindFusion.Graphs.LayoutDirection.TopToBottom;
@@ -459,7 +449,7 @@ function notSure(id, originNode) {
     linkType = MindFusion.Graphs.TreeLayoutLinkType.Cascading;
     if (arr[id].length > 0) {
         for (var i = 0; i < arr[id].length; i++) {
-            let node = new MindFusion.Diagramming.ControlNode(diagram);
+            let node = new MindFusion.Diagramming.ControlNode(diagramView);
             let ids = arr[id][i];
             currTreeIdList.push(parseInt(ids));
             let len = str[ids].search(',');
@@ -528,20 +518,22 @@ function notSure(id, originNode) {
 
                     console.log("check s in get_sql_result: " + s);
                     let showResult = str[ids].substring(0, len + 2) + s;
+                    
                     let {val, ifCheckbox, unique_id} = decision_node(arr, ids, showResult);
+                    node.template = val;
+                    node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                    node.id = ids;
 
-                    node.setTemplate(val);
-                    node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
                     // node.setLocked(true);
                     // node.setVisible(true);
-                    node.setStroke('#003466');
-                    node.setId(ids);
+                    node.stroke = '#003466';
                     diagram.addItem(node);
                     var link = new DiagramLink(diagram, originNode, node);
-                    link.setHeadShape('Triangle');
-                    link.setHeadBrush('#003466');
-                    link.setStroke('#003466');
-                    link.setLocked(true);
+                    link.headShape = 'Triangle';
+                    link.headBrush = '#003466';
+                    link.stroke = '#003466';
+                    link.locked = true;
+
                     diagram.addItem(link);
                     diagram.arrange(layout);
                     diagram.resizeToFitItems(10);
@@ -573,19 +565,20 @@ function notSure(id, originNode) {
             }    
             else {            
                 let {val, ifCheckbox, unique_id} = decision_node(arr, id, str[ids], true, true);
-
-                node.setTemplate(val);
-                node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
+                node.template = val;
+                node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                node.id = ids;
                 // node.setLocked(true);
                 // node.setVisible(false);
-                node.setStroke('#003466');
-                node.setId(ids);
+                node.stroke  = '#003466';
                 diagram.addItem(node);
+
                 var link = new DiagramLink(diagram, originNode, node);
-                link.setHeadShape('Triangle');
-                link.setHeadBrush('#003466');
-                link.setStroke('#003466');
-                link.setLocked(true);
+                link.headShape = 'Triangle';
+                link.headBrush = '#003466';
+                link.stroke = '#003466';
+                link.locked = true;
+
                 diagram.addItem(link);
                 diagram.arrange(layout);
                 diagram.resizeToFitItems(10);
@@ -618,7 +611,7 @@ function notSure(id, originNode) {
 // Input: id is the id of the current box, originNode is the current box object, and results is the list containing the answers of the checkbox
 // No ouput
 function showCheckbox(id, originNode, results) {
-    var node = new MindFusion.Diagramming.ControlNode(diagram);
+    var node = new MindFusion.Diagramming.ControlNode(diagramView);
     var layout = new MindFusion.Graphs.TreeLayout();
 
     layout.root = node;
@@ -629,7 +622,7 @@ function showCheckbox(id, originNode, results) {
     if (arr[id].length > 0) {
         for (var i = 0; i < arr[id].length; i++) {
             if(results.includes(i)) {
-                let node = new MindFusion.Diagramming.ControlNode(diagram);
+                let node = new MindFusion.Diagramming.ControlNode(diagramView);
                 let ids = arr[id][i];
                 currTreeIdList.push(parseInt(ids));
                 let len = str[ids].search(',');
@@ -701,19 +694,19 @@ function showCheckbox(id, originNode, results) {
                         // var val = `<div id="d1"><p>` + s + `</p></div>`;
                         let showResult = str[ids].substring(0, len + 2) + s;
                         let {val, ifCheckbox, unique_id} = decision_node(arr, ids, showResult);
-
-                        node.setTemplate(val);
-                        node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
+                        node.template = val;
+                        node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                        node.id = ids;
                         // node.setLocked(true);
                         // node.setVisible(false);
-                        node.setStroke('#003466');
-                        node.setId(ids);
+                        node.stroke  = '#003466';
                         diagram.addItem(node);
+
                         var link = new DiagramLink(diagram, originNode, node);
-                        link.setHeadShape('Triangle');
-                        link.setHeadBrush('#003466');
-                        link.setStroke('#003466');
-                        link.setLocked(true);
+                        link.headShape = 'Triangle';
+                        link.headBrush = '#003466';
+                        link.stroke = '#003466';
+                        link.locked = true;
                         diagram.addItem(link);
                         // createAnimatedLink(originNode, node);
                         diagram.arrange(layout);
@@ -742,19 +735,19 @@ function showCheckbox(id, originNode, results) {
                     }
                 }
                 else {
-                    let {val, ifCheckbox ,unique_id} = decision_node(arr, ids, str[ids]);
-                    node.setTemplate(val);
-                    node.setBounds(new Rect(originNode.getBounds().x, originNode.getBounds().y + 60, bx, by));
+                    let {val, ifCheckbox, unique_id} = decision_node(arr, ids, str[ids]);
+                    node.template = val;
+                    node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                    node.id = ids;
                     // node.setLocked(true);
                     // node.setVisible(false);
-                    node.setStroke('#003466');
-                    node.setId(ids);
+                    node.stroke = '#003466';
                     diagram.addItem(node);
                     var link = new DiagramLink(diagram, originNode, node);
-                    link.setHeadShape('Triangle');
-                    link.setHeadBrush('#003466');
-                    link.setStroke('#003466');
-                    link.setLocked(true);
+                    link.headShape = 'Triangle';
+                    link.headBrush = '#003466';
+                    link.stroke = '#003466';
+                    link.locked = true;
                     diagram.addItem(link);
                     // createAnimatedLink(originNode, node);
                     diagram.arrange(layout);
@@ -781,19 +774,19 @@ function showCheckbox(id, originNode, results) {
 // No return output
 function createAnimatedLink(originNode, node) {
     var link = new DiagramLink(diagram, originNode, node);
-    link.setHeadShape('Triangle');
-    link.setHeadBrush('#003466');
-    link.setStroke('#003466');
-    link.setLocked(true);
+    link.headShape = 'Triangle';
+    link.headBrush = '#003466';
+    link.stroke = '#003466';
+    link.locked = true;
     diagram.addItem(link);
     
-    var ep = link.getEndPoint();
-    link.setEndPoint(link.getStartPoint());
-    var animation = new Animation(link, { fromValue: link.getStartPoint(), toValue: ep, animationType: AnimationType.Bounce, easingType: EasingType.EaseOut, duration: 1000 }, onUpdateLink);
+    var ep = link.endPoint;
+    link.endPoint = link.startPoint;
+    var animation = new Animation(link, { fromValue: link.startPoint, toValue: ep, animationType: AnimationType.Bounce, easingType: EasingType.EaseOut, duration: 1000 }, onUpdateLink);
     
     animation.addEventListener(AnimationEvents.animationComplete, function (sender, args) {
         
-        node.setVisible(true);
+        node.visible = true;
 
     });
     
@@ -819,7 +812,7 @@ function deleteNode(id) {
     });
 
     if (nodes.length > 0) {
-        deleteRecursively(nodes[0].getOutgoingLinks());
+        deleteRecursively(nodes[0].outgoingLinks);
     }
 }
 
@@ -831,8 +824,8 @@ function deleteNode(id) {
 // No output
 function deleteRecursively(links) {
     for (var i = links.length - 1; i >= 0; i--) {
-        var node = links[i].getDestination();
-        var nlinks = node.getOutgoingLinks();
+        var node = links[i].destination;
+        var nlinks = node.outgoingLinks;
         deleteRecursively(nlinks);
         diagram.removeItem(node);
 
@@ -844,13 +837,12 @@ function deleteRecursively(links) {
 // It is called by createAnimatedLink function
 function onUpdateLink(animation, animationProgress) {
     var link = animation.item;
-    var pointA = animation.getFromValue(),
-        pointB = animation.getToValue();
+    var pointA = animation.fromValue,
+        pointB = animation.toValue;
 
-    link.setEndPoint(
-        new Point(
+    link.endPoint = new Point(
             pointA.x + (pointB.x - pointA.x) * animationProgress,
-            pointA.y + (pointB.y - pointA.y) * animationProgress));
+            pointA.y + (pointB.y - pointA.y) * animationProgress);
     link.invalidate();
 }
 

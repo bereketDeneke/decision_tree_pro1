@@ -148,10 +148,10 @@ function smoothScroll(uid){
     // }, 500);
 }
 
-function disable_canvas_interaction(){
-    const canvas = document.getElementById('diagram');
-    canvas.style.pointerEvents = 'none'; // Disable pointer events
-}
+// function disable_canvas_interaction(){
+//     const canvas = document.getElementById('diagram');
+//     canvas.style.pointerEvents = 'none'; // Disable pointer events
+// }
 
 function active_node(node){
     const active = document.querySelector(".active_node");
