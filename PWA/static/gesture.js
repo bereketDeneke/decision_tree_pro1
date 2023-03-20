@@ -49,6 +49,7 @@ let d1 = 1, rs = 1, rf = 0;
       
     }
   });
+  
   canvas_container.addEventListener('touchmove', function(event) {
     event.preventDefault();
     if (event.touches.length > 1) {
