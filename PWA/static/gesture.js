@@ -91,30 +91,3 @@ let d1 = 1, rs = 1, rf = 0;
   canvas_container.addEventListener('touchcancel', function(e){
     rs = (rf < 1)? 1: rf;
   });
-
-
-
-  canvas_container.addEventListener('mousedown', function(event) {
-    if (event.button == 0) {
-      d1 = dist(event.pageX, event.pageY, event.pageX, event.pageY);
-    }
-  });
-  
-  canvas_container.addEventListener('mousemove', function(event) {
-    if (event.buttons == 1) {
-      rf = dist(event.pageX, event.pageY, event.pageX, event.pageY) / d1 * rs;
-      with(Math) {
-        map = min(max(1, rf), 200);
-        diagram.setZoomLevel(map);
-        rf = map;
-      }
-    }
-  });
-  
-  canvas_container.addEventListener('mouseup', function() {
-    rs = (rf < 1)? 1: rf;
-  });
-  
-  canvas_container.addEventListener('mouseleave', function() {
-    rs = (rf < 1)? 1: rf;
-  });
