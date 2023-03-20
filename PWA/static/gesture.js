@@ -56,7 +56,7 @@ let d1 = 1, rs = 1, rf = 0;
 
       //get the ratio
       rf = dist(event) / d1 * rs;
-      alert(rf," ", d1," ", rs);
+      document.getElementById("Screen_Title").textContent = `Rf: ${rf} D1: ${d1} RS: ${rs}`;
       with(Math){
         // console.log('pt: ', rect);
         map = min(max(1, rf), 200);
