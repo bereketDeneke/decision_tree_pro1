@@ -80,7 +80,7 @@ function rootNode() {
       
     var Behavior = MindFusion.Diagramming.Behavior;
     diagramView.behavior = Behavior.SelectOnly;
-    diagramView.multiTouchDraw = true;
+    diagramView.multiTouchDraw = false;
     // diagramView.orientation = MindFusion.Graphs.Orientation.Vertical;
     diagramView.mouseWheelAction = MouseWheelAction.Zoom;
     // diagram.virtualScroll = true;
