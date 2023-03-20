@@ -225,7 +225,6 @@ function rootNode() {
     if(s.includes("DECISIONTREE") && ifNewInput == 'yes') {
         newInput(link, id);
     }
-    smoothScroll(unique_id);
 }
 
 
@@ -268,7 +267,6 @@ function selectClick(e, sender) {
         printPath(parent_id, -1, false);
     }
     
-    disable_canvas_interaction();
     active_node(sender.getContent());
 }
 
@@ -360,7 +358,6 @@ function nextoption(id, originNode) {
             diagram.addItem(node);
             createAnimatedLink(originNode, node);
             diagram.resizeToFitItems(10);
-            smoothScroll(unique_id);
         }
         
         get_sql_result(myCallback);
@@ -427,7 +424,6 @@ function nextoption(id, originNode) {
             ifNewInput = JSON.parse(localStorage.getItem("ifNewInput"));
         }
 
-        smoothScroll(unique_id);
     }
 
 
@@ -539,8 +535,6 @@ function notSure(id, originNode) {
                     diagram.resizeToFitItems(10);
                     // createAnimatedLink(originNode, node);
 
-                    smoothScroll(unique_id);
-
                 }
 
                 get_sql_result(myCallback);
@@ -584,7 +578,6 @@ function notSure(id, originNode) {
                 diagram.resizeToFitItems(10);
                 // createAnimatedLink(originNode, node);
                 
-                smoothScroll(unique_id);
                 // submit the checkbox answers
                 if(arr[id].length > 5) {
                     var o = document.getElementById("cb-button");
@@ -711,8 +704,6 @@ function showCheckbox(id, originNode, results) {
                         // createAnimatedLink(originNode, node);
                         diagram.arrange(layout);
                         diagram.resizeToFitItems(10);
-
-                        smoothScroll(unique_id);
                     }
 
                     get_sql_result(myCallback);
@@ -752,9 +743,6 @@ function showCheckbox(id, originNode, results) {
                     // createAnimatedLink(originNode, node);
                     diagram.arrange(layout);
                     diagram.resizeToFitItems(10);
-
-                    // scroll to the element
-                    smoothScroll(unique_id);
 
                     // create a larger decision tree for the new input file
                     if(s.includes("DECISIONTREE") && ifNewInput == 'yes') {

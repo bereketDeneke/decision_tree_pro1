@@ -133,26 +133,6 @@ function upload_file(){
     attach.click();
 }
 
-function smoothScroll(uid){
-    console.log(uid);
-    // const scrollContainer = document.querySelector(`.row > div > div:last-child`);
-    // const currentNode = document.querySelector(`[uid="${uid}"]`);
-
-    // const position = currentNode.getBoundingClientRect();
-    // const top_limit = position.y + currentNode.clientHeight;
-    // const left_limit = position.x + currentNode.clientWidth;
-
-    // setTimeout(() => {
-    //     scrollContainer.scrollTop = top_limit;
-    //     scrollContainer.scrollLeft = left_limit;
-    // }, 500);
-}
-
-// function disable_canvas_interaction(){
-//     const canvas = document.getElementById('diagram');
-//     canvas.style.pointerEvents = 'none'; // Disable pointer events
-// }
-
 function active_node(node){
     const active = document.querySelector(".active_node");
     if(active != null){
