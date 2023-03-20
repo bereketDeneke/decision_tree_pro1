@@ -39,8 +39,43 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
     
     return {val, ifCheckbox, unique_id};
 }
+var modal = document.querySelector('ion-modal');
+  // let is_maximized = false;
+
+  function dismiss() {
+    modal.isOpen = false;
+    modal.canDismiss = true;
+    let update = document.querySelector('#curr_options');
+    update.remove();
+    modal.dismiss();
+  }
+  
+  async function Toast(msg) {
+    const notification = document.querySelector("#toast_container");
+    notification.querySelector("label").innerText = msg;
+    notification.classList.add('active');
+    setTimeout(()=>{
+      // remove the class 
+      notification.classList.remove('active');
+    }, 8000);
+  }
+
+  const searchInput = document.querySelector('ion-searchbar');
+  searchInput.addEventListener('ionChange', (e)=>{
+    let val = e.target.value;
+    let nodes = document.querySelectorAll('.mf_diagram_controlNodeContent');
+    nodes.forEach(node=>{
+      if(val.trim().length !== 0 && node.textContent.toLowerCase().includes(val.toLowerCase()))
+        node.classList.add('selected_item');
+      else
+        node.classList.remove('selected_item');
+    });
+  });
+
+
 
 function openModal(header){
+    console.log("header: "+header);
     if(header == null || header == undefined) return false;
 
     // Initialize the necessary variables 

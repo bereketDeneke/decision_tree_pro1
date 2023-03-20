@@ -83,10 +83,9 @@ function rootNode() {
     diagramView.multiTouchDraw = false;
     // diagramView.orientation = MindFusion.Graphs.Orientation.Vertical;
     diagramView.mouseWheelAction = MouseWheelAction.Zoom;
-    // diagram.virtualScroll = true;
+    diagram.virtualScroll = true;
     diagramView.allowInplaceEdit = false;
     diagram.allowSelfLoops = false;
-
 
     var id = 0;
     var node = new MindFusion.Diagramming.ControlNode(diagramView);
@@ -150,8 +149,7 @@ function rootNode() {
     node.id = id;
     diagram.addItem(node);
     diagram.resizeToFitItems(10);
-
-
+    
     // printing and saving the path from root to keyword node
     if(ifSearch == 'yes') {
         findPath(0, root_key_id, key);
@@ -239,7 +237,7 @@ let path_search = [];
 // No output
 function selectClick(e, sender) {
     // console.log("reach");
-    var selectControl = sender.getContent().getElementsByTagName("select")[0];
+    var selectControl = sender.content.getElementsByTagName("select")[0];
     deleteNode(sender.id);
     
     if (selectControl.value != "none" && selectControl.value != "NotSure") {
@@ -267,7 +265,7 @@ function selectClick(e, sender) {
         printPath(parent_id, -1, false);
     }
     
-    active_node(sender.getContent());
+    active_node(sender.content);
 }
 
 
