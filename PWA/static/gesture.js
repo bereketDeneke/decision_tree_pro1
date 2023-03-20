@@ -35,7 +35,7 @@ function zoomOut(ele){
 const canvas_container = document.querySelector('.row');
 let Rectangle = MindFusion.Drawing.Rect;
 let rect = null;
-let d1 = 100, rs = 1, rf = 0;
+let d1 = 100, rs = .01, rf = 0;
 
  function dist(a) {
     var zw = a.touches[0].pageX - a.touches[1].pageX, zh = a.touches[0].pageY - a.touches[1].pageY;
