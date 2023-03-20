@@ -35,7 +35,7 @@ function zoomOut(ele){
 const canvas_container = document.querySelector('.row');
 let Rectangle = MindFusion.Drawing.Rect;
 let rect = null;
-let d1 = 100, rs = .01, rf = 0;
+let d1 = 1, rs = 1, rf = 0;
 
  function dist(a) {
     var zw = a.touches[0].pageX - a.touches[1].pageX, zh = a.touches[0].pageY - a.touches[1].pageY;
@@ -55,6 +55,7 @@ let d1 = 100, rs = .01, rf = 0;
 
       //get the ratio
       rf = dist(event) / d1 * rs;
+      alert(rf," ", d1," ", rs);
       with(Math){
         // console.log('pt: ', rect);
         map = min(max(1, rf), 200);
