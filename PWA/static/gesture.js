@@ -36,6 +36,7 @@ const canvas_container = document.querySelector('.row');
 let Rectangle = MindFusion.Drawing.Rect;
 let rect = null;
 let d1 = 1, rs = 1, rf = 0;
+let first_use = true;
 
  function dist(a) {
     var zw = a.touches[0].pageX - a.touches[1].pageX, zh = a.touches[0].pageY - a.touches[1].pageY;
@@ -55,9 +56,8 @@ let d1 = 1, rs = 1, rf = 0;
     if (event.touches.length > 1) {
 
       //get the ratio
-      rf = dist(event) / d1 * rs;
-      rf = diagram.getZoomFactor() - rf;
-      document.getElementById("Screen_Title").textContent = `Rf: ${rf} D1: ${d1} RS: ${rs}`;
+      rf = (first_use)? diagram.getZoomFactor(): dist(event) / d1 * rs;
+      document.getElementById("Screen_Title").textContent = `DT >> Rf: ${rf} D1: ${d1} RS: ${rs}`;
       with(Math){
         // console.log('pt: ', rect);
         map = min(max(1, abs(rf)), 200);
@@ -65,6 +65,7 @@ let d1 = 1, rs = 1, rf = 0;
         // diagram.zoomToRect(rect);
         rf = map;
       }
+      first_use = false;
     }
   });
 
