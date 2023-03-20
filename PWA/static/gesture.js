@@ -52,15 +52,15 @@ let d1 = 1, rs = 1, rf = 0;
   // }
   //attach the events
   canvas_container.addEventListener('touchstart', function(event) {
+    event.preventDefault();
     if (event.touches.length > 1) {
-      event.preventDefault();
       d1 = dist(event);
       
     }
   });
   canvas_container.addEventListener('touchmove', function(event) {
+    event.preventDefault();
     if (event.touches.length > 1) {
-      event.preventDefault();
 
       //get the ratio
       rf = dist(event) / d1 * rs;
@@ -84,10 +84,24 @@ let d1 = 1, rs = 1, rf = 0;
   });
 
   //check if scale is less than 1 and keep the previous ratio
-  canvas_container.addEventListener('touchend', function() {
+  canvas_container.addEventListener('touchend', function(e) {
     rs = (rf < 1)? 1: rf;
   });
 
   canvas_container.addEventListener('touchcancel', function(e){
     rs = (rf < 1)? 1: rf;
   });
+
+
+  // Function to prevent pinch and mouse scroll event
+function preventScaling(event) {
+  if (event.ctrlKey === true || event.metaKey) {
+    event.preventDefault();
+  }
+}
+
+// Attach the preventScaling function to the "wheel" event on the window
+window.addEventListener('wheel', preventScaling, { passive: false });
+
+// Attach the preventScaling function to the "touchmove" event on the document
+document.addEventListener('touchmove', preventScaling, { passive: false });
