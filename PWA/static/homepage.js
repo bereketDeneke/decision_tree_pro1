@@ -20,7 +20,7 @@ var vec;
 var bx = 50, by = 40;
 var diagram = null;
 let textArea = "";
-
+DecisionTree = new Tree();
 // var input1 = document.querySelector('input');
 // var textarea = document.querySelector('textarea');
 // let chooseTopic = document.getElementsByClassName('chooseTopic');
@@ -231,7 +231,7 @@ function input() {
 	localStorage.setItem("ifSearch", JSON.stringify('no'));
 	//document.location.href = "tree.html";
 	if(error == '') {
-		render_tree();
+		DecisionTree.render();
 	}
 	else {
 		// jump(error_loc);

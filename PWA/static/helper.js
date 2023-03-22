@@ -53,23 +53,19 @@ var modal = document.querySelector('ion-modal');
   async function Toast(msg) {
     const notification = document.querySelector("#toast_container");
     notification.querySelector("label").innerText = msg;
-    notification.classList.add('active');
+    notification.classList.add('error');
     setTimeout(()=>{
       // remove the class 
-      notification.classList.remove('active');
-    }, 8000);
+      notification.classList.remove('error');
+    }, 1000);
   }
 
   const searchInput = document.querySelector('ion-searchbar');
-  searchInput.addEventListener('ionChange', (e)=>{
-    let val = e.target.value;
-    let nodes = document.querySelectorAll('.mf_diagram_controlNodeContent');
-    nodes.forEach(node=>{
-      if(val.trim().length !== 0 && node.textContent.toLowerCase().includes(val.toLowerCase()))
-        node.classList.add('selected_item');
-      else
-        node.classList.remove('selected_item');
-    });
+  searchInput.addEventListener('keyup', (e)=>{
+    if(e.code == "Enter"){
+        searchInput.querySelector("input").id = "input";
+        DecisionTree.input_search();
+    }
   });
 
 

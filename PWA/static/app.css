@@ -7,6 +7,7 @@
     --ion-color-primary-tint: #f3b058;
     --primary:#f3b058
   }
+
   .mf_diagram_controlNodeContent {
     transition: opacity 0.3s ease-in-out !important;
   }
@@ -46,8 +47,106 @@
   background: #dbdbdb !important;
 }
 
-#zoom_control{
-  z-index: 1000000;
+.hide {
+  max-height: 0;
+  transition: max-height .8s ease-in-out;
+  overflow: hidden;
+}
+
+.show {
+  max-height: 250px; /* Set to a value greater than the maximum height of the element */
+  transition: max-height .8s ease-in-out;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 5px;
 }
 
 
+/* Style for search results container */
+.search-results {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  /* justify-content: center; */
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Style for Expand button */
+.search-results input[type="button"] {
+  background-color: #05395b;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 0px;
+}
+
+.search-results input[type="button"]:hover {
+  background-color: #824e04;
+}
+
+/* Style for alreadyVisited, reachable, and otherNodes sections */
+.search-results div {
+  margin-top: 16px;
+  display: none;
+  color: #333;
+}
+
+/* Show the alreadyVisited, reachable, or otherNodes sections when the corresponding button is clicked */
+.search-results.show #alreadyVisited,
+.search-results.show #reachable,
+.search-results.show #otherNodes {
+  display: block;
+}
+
+
+.toast-message {
+  background-color: #333;
+  color: #fff;
+  z-index: 100000000000;
+  border-radius: 5px;
+  padding: 16px;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 90%;
+  margin: 0 auto;
+  position: relative;
+  top: 70%;
+  visibility: hidden;
+  transform: translateY(-50%);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+  transition: margin-top .5s;
+}
+
+.toast-message.success {
+  background-color: #28a745;
+  visibility:visible;
+  margin-top: 30px;
+}
+
+.toast-message.error {
+  background-color: #dc3545;
+  visibility:visible;
+  margin-top: 30px;
+  transition: margin-top .5s;
+}
+
+.toast-message.warning {
+  background-color: #ffc107;
+  visibility:visible;
+  margin-top: 30px;
+}
+
+.toast-message.info {
+  background-color: #17a2b8;
+  visibility:visible;
+  margin-top: 30px;
+}
