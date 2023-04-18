@@ -312,9 +312,9 @@
   border: 1px solid #ccc;
   border-radius: 9px;
   text-align: justify;
-  /* text-overflow: ellipsis !important; */
+  text-overflow: ellipsis !important;
   cursor: pointer;
-  /* height: 39px; */
+  height: 39px;
   overflow: hidden;
 }
 
@@ -329,7 +329,7 @@
 
 .result-card p {
   margin: 0;
-  /* text-overflow: ellipsis; */
+  text-overflow: ellipsis;
   word-break: keep-all !important; /* add word-break property */
   flex-grow: 1; /* expand to fill available space */
 }
