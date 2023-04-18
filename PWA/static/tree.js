@@ -1,4 +1,4 @@
-
+'use strict';
 class Tree{
     constructor(){
         this.str = JSON.parse(localStorage.getItem("str-array"));
@@ -38,13 +38,6 @@ class Tree{
         
         this.ifNewInput = '';
         this.ifClickedRadio = false;
-
-        if(this.ifSearch == 'yes' ) {
-            this.ifNewInput = 'no';
-        }
-        else if(this.ifSearch == 'no') {
-            this.ifNewInput = 'yes';
-        }
         
         this.root_key_id = [];
         this.path_subtree = []; 
@@ -56,20 +49,102 @@ class Tree{
         this.root_id = 0;
         this.path_search = [];
 
+        // MindFusion.Diagramming.CompatConfig.propFunctions = true;
+        MindFusion.Diagramming.DiagramView.prototype.setZoomFactor =
+            function(value) { this.zoomFactor = value; }
+
+        // Event handlers for virtual scrolling
+        let isTouching = false;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let lastUpdateTime = 0;
+
+        window.addEventListener("touchstart", (e) => {
+            if (e.touches.length === 1) {
+                isTouching = true;
+                touchStartX = e.touches[0].pageX;
+                touchStartY = e.touches[0].pageY;
+            }
+        });
+
+        window.addEventListener("touchmove", (e) => {
+            if (isTouching && e.touches.length === 1) {
+                const touchEndX = e.touches[0].pageX;
+                const touchEndY = e.touches[0].pageY;
+                const dx = touchEndX - touchStartX;
+                const dy = touchEndY - touchStartY;
+                
+                // Update the scrolling position
+                const now = performance.now();
+                if (now - lastUpdateTime > 16) { // Limit updates to 60fps
+                    DecisionTree.diagramView.scrollX -= dx;
+                    DecisionTree.diagramView.scrollY -= dy;
+                    lastUpdateTime = now;
+                }
+                
+                // Prevent scrolling the page
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener("touchend", () => {
+            isTouching = false;
+        });
+
+    }
+
+    __init__(){
+        this.cleanCanvas();
+        this.str = JSON.parse(localStorage.getItem("str-array"));
+        this.str_hyphens = JSON.parse(localStorage.getItem("str-hyphens-array"));
+        this.arr = JSON.parse(localStorage.getItem("arr-array"));
+        // The key is an id (a single line number starting from 0)
+        this.key = JSON.parse(localStorage.getItem("search_result"));
+        // this.ifSubtree = JSON.parse(localStorage.getItem("ifSubtree"));
+
+        // ifSearch will become yes only after the user first search the node 
+        // This can prevent the tree.html from auto-selecting the answers even though the user just left the index page. 
+        this.ifSearch = JSON.parse(localStorage.getItem("ifSearch"));
+
+        if(this.ifSearch == 'yes' ) {
+            this.ifNewInput = 'no';
+        }
+        else if(this.ifSearch == 'no') {
+            this.ifNewInput = 'yes';
+        }
+    }
+
+    cleanCanvas(){
+        const canvas = document.getElementById('diagram');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, ctx.width, ctx.height);
+        const previous_nodes = document.querySelectorAll(".mf_diagram_controlNodeContent");
+    
+        previous_nodes.forEach(node=>{
+            node.remove();
+        })
     }
 
     render(){
+        this.__init__();
         // Render Root 
         this.currTreeIdList.push(0);
         this.diagramView = this.DiagramView.create(document.getElementById("diagram"));
         this.diagram = this.diagramView.diagram;
         this.diagram.addEventListener("nodeActivated", function (sender, e) {
             if (e.node !== this.diagram.selection.items[0]) {
-            this.diagram.activeItem = this.diagram.selection.items[0];
+                this.diagram.activeItem = this.diagram.selection.items[0];
+                bounds = activeItem.getBounds();
+
+                const bounds = this.diagram.activeItem.bounds;
+                // Center the diagram on the active item or node
+                const centerX = bounds.x + bounds.width / 2;
+                const centerY = bounds.y + bounds.height / 2;
+                this.diagramView.scrollTo(centerX - diagram.clientWidth / 2, centerY - diagram.clientHeight / 2);
             }
         });
         
-        this.diagramView.behavior = this.Behavior.SelectOnly;
+        this.diagramView.behavior = this.Behavior.DoNothing;
         this.diagramView.multiTouchDraw = false;
         this.diagramView.multiTouchZoom = true;
         this.diagramView.mouseWheelAction = this.MouseWheelAction.Zoom;
@@ -77,8 +152,8 @@ class Tree{
 
         let id = 0;
         let node = new this.ControlNode(this.diagramView);
-        let len = str[id].search(',');
-        let s = str[0].substring(len + 1, str[0].length);
+        let len = this.str[id].search(',');
+        let s = this.str[0].substring(len + 1, this.str[0].length);
 
 
         // detect if the text contains link and add hypertext reference to the link
@@ -98,26 +173,26 @@ class Tree{
             this.by = 30;
         }
 
-        let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
+        let {val, ifCheckbox, unique_id} = decision_node(this.arr, id, s, false, true);
         node.template = val;
-        node.bounds = new Rect(40, 10, bx, by);
+        node.bounds = new Rect(40, 10, this.bx, this.by);
         node.id = id;
         this.diagram.addItem(node);
         this.diagram.resizeToFitItems(10);
 
         // printing and saving the path from root to keyword node
         if(this.ifSearch == 'yes') {
-            findPath(0, root_key_id, key);
+            this.findPath(0, this.root_key_id, this.key);
             let root_key = [];
-            for(let i = 0; i < root_key_id.length; i++) {
-                root_key.push(str_hyphens[root_key_id[i]]);
-                this.pathAndSubtree.push(root_key_id[i]);
+            for(let i = 0; i < this.root_key_id.length; i++) {
+                root_key.push(this.str_hyphens[this.root_key_id[i]]);
+                this.pathAndSubtree.push(this.root_key_id[i]);
             }
 
     
-            console.log("search path (from root to keyword): ");
+            //console.log("search path (from root to keyword): ");
             for(let i = 0; i < root_key.length; i++) {
-                console.log(root_key[i] + '\n');
+                //console.log(root_key[i] + '\n');
             }
             
             // for passing values to python
@@ -129,12 +204,12 @@ class Tree{
                 contentType:"application/json",
                 data: JSON.stringify(s_test),
             });
-            console.log("subtree: ");
+            //console.log("subtree: ");
 
             // get subtree
-            this.subtree(true, key); // this function will fill up the path_subtree
+            this.subtree(true, this.key); // this function will fill up the path_subtree
 
-            let path_subtree_dic = Object.assign({}, path_subtree );
+            let path_subtree_dic = Object.assign({}, this.path_subtree );
             const s2 = JSON.stringify(path_subtree_dic);
             $.ajax({
                 url:"/get_subtree",
@@ -144,12 +219,12 @@ class Tree{
             });
 
 
-            $('.select').val(root_key_id[1]);
-            selectClick(0, node);
+            $('.select').val(this.root_key_id[1]);
+            this.selectClick(0, node);
     
                 
                 // create new node for the new input file
-                // console.log("check s: " + s);
+                // //console.log("check s: " + s);
         }
             
         if(s.includes("DECISIONTREE") && this.ifNewInput == 'yes') {
@@ -186,7 +261,7 @@ class Tree{
             // We use this function to help receive the result from python
             function myCallback(sql_result) {
 
-                console.log("check sql_result[1]: "  + sql_result[1]);
+                //console.log("check sql_result[1]: "  + sql_result[1]);
                 
                 let sql_result_list = [];
                 let hasResult = true;
@@ -198,14 +273,14 @@ class Tree{
                         break; // that means there is no result
                     }
                     let test = sql_result[1].substring(len3 + 1, len4).split(', ');
-                    console.log("test: " + test);
+                    //console.log("test: " + test);
                     sql_result_list.push(test);
                     sql_result[1] = sql_result[1].substring(len4 + 1, sql_result[1].length);
-                    console.log("check sql_result for each loop: " + sql_result[1]);
+                    //console.log("check sql_result for each loop: " + sql_result[1]);
                 }
 
                 if(hasResult == true) {
-                    console.log("check sql_result_list: " + sql_result_list[0]);
+                    //console.log("check sql_result_list: " + sql_result_list[0]);
                     let ifPlural1 = sql_result_list.length > 1 ? "houses " : "house ";
                     let ifPlural2 =  sql_result_list.length > 1 ? "meet " : "meets ";
                     let ifPlural3 =  sql_result_list.length > 1 ? "are " : "is ";
@@ -221,12 +296,12 @@ class Tree{
                     s = "Sorry, there is no house meeting your need. Please change your answers.";
                 }
 
-                console.log("check s in get_sql_result: " + s);
-                console.log("check id in nextoption: " + id);
+                //console.log("check s in get_sql_result: " + s);
+                //console.log("check id in nextoption: " + id);
 
-                let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
+                let {val, ifCheckbox, unique_id} = decision_node(this.arr, id, s, false, true);
                 node.template = val;
-                node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, this.bx, this.by);
                 node.id = id;
                 node.locked = true;
                 node.visible = true; // I changed it from false to true for auto selecting the answers according to path
@@ -244,7 +319,7 @@ class Tree{
             function get_sql_result(callback) { 
                 let len2 = s.search('SQL:');
                 let query = s.substring(len2 + 5, s.length); // plus 5 to skip 'SQL: ' 
-                console.log(query);
+                //console.log(query);
                 let query_list = [];
                 query_list.push(query);
                 let query_dic = Object.assign({}, query_list);
@@ -259,9 +334,9 @@ class Tree{
             }
 
         } else {
-            let {val, ifCheckbox, unique_id} = decision_node(arr, id, s, false, true);
+            let {val, ifCheckbox, unique_id} = decision_node(this.arr, id, s, false, true);
             node.template = val;
-            node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+            node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, this.bx, this.by);
             node.id = id; 
             node.locked = true;
             node.visible = true; // I changed it from false to true for auto selecting the answers according to path
@@ -273,24 +348,24 @@ class Tree{
             // submit the checkbox answers
             if(this.arr[id].length > 5) {
                 let o = document.getElementById("cb-button");
-                console.log("check o: " + o);
+                //console.log("check o: " + o);
                 this.currId = id;
                 this.currOriginNode = node;
                 o.onclick = this.checkboxAnswers;
             }
 
             //auto select along the path
-            if(this.arr[id].length !=  0 && this.ifSearch == 'yes' && index < this.root_key_id.length) {
-                id_str = id.toString();
-                $('#' + id_str).val(this.root_key_id[index]);
-                index = index + 1;
-                if(this.ifCheckbox == false) {
+            if(this.arr[id].length !=  0 && this.ifSearch == 'yes' && this.index < this.root_key_id.length) {
+                let id_str = id.toString();
+                $('#' + id_str).val(this.root_key_id[this.index]);
+                this.index = this.index + 1;
+                if(ifCheckbox == false) {
                     // 0 has no meaning. It is just the 'e' standing for everything
                     this.selectClick(0, node);
                 }
-                else if(this.ifCheckbox == true) {
+                else if(ifCheckbox == true) {
                     let results = [];
-                    results.push(this.root_key_id[index - 1] - parseInt(id) - 1);
+                    results.push(this.root_key_id[this.index - 1] - parseInt(id) - 1);
                     this.showCheckbox(id, node, results);
                 }
             }
@@ -314,14 +389,14 @@ class Tree{
         layout.levelDistance = 33;
         // let linkType = MindFusion.Graphs.TreeLayoutLinkType.Cascading;
         
-        if (arr[id].length > 0) {
-            for (let i = 0; i < arr[id].length; i++) {
+        if (this.arr[id].length > 0) {
+            for (let i = 0; i < this.arr[id].length; i++) {
                 let node = new this.ControlNode(this.diagramView);
-                let ids = arr[id][i];
+                let ids = this.arr[id][i];
                 this.currTreeIdList.push(parseInt(ids));
                 let len = this.str[ids].search(',');
                 let s = this.str[ids].substring(len + 1, this.str[ids].length);
-                console.log("check ids1: " + ids);
+                //console.log("check ids1: " + ids);
                 // Shrink the node if the text is small. 
                 if(s.length < 40) {
                     this.by = 22;
@@ -345,7 +420,7 @@ class Tree{
                     // We need this myCallback function because the code in ajax runs asynchronously. 
                     // We use this function to help receive the result from python
                     function myCallback(sql_result) {
-                        console.log("check sql_result[1]: "  + sql_result[1]);
+                        //console.log("check sql_result[1]: "  + sql_result[1]);
 
                         let sql_result_list = [];
                         let hasResult = true;
@@ -357,14 +432,14 @@ class Tree{
                                 break; // that means there is no result
                             }
                             let test = sql_result[1].substring(len3 + 1, len4).split(', ');
-                            console.log("test: " + test);
+                            //console.log("test: " + test);
                             sql_result_list.push(test);
                             sql_result[1] = sql_result[1].substring(len4 + 1, sql_result[1].length);
-                            console.log("check sql_result for each loop: " + sql_result[1]);
+                            //console.log("check sql_result for each loop: " + sql_result[1]);
                         }
 
                         if(hasResult == true) {
-                            console.log("check sql_result_list: " + sql_result_list[0]);
+                            //console.log("check sql_result_list: " + sql_result_list[0]);
                             let ifPlural1 = sql_result_list.length > 1 ? "houses " : "house ";
                             let ifPlural2 =  sql_result_list.length > 1 ? "meet " : "meets ";
                             let ifPlural3 =  sql_result_list.length > 1 ? "are " : "is ";
@@ -380,12 +455,12 @@ class Tree{
                             s = "Sorry, there is no house meeting your need. Please change your answers.";
                         }
 
-                        console.log("check s in get_sql_result: " + s);
+                        //console.log("check s in get_sql_result: " + s);
                         let showResult = this.str[ids].substring(0, len + 2) + s;
                         
-                        let {val, ifCheckbox, unique_id} = decision_node(arr, ids, showResult);
+                        let {val, ifCheckbox, unique_id} = decision_node(this.arr, ids, showResult);
                         node.template = val;
-                        node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                        node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, this.bx, this.by);
                         node.id = ids;
 
                         node.stroke = '#003466';
@@ -407,7 +482,7 @@ class Tree{
                         let len2 = s.search('SQL:');
                         let query = s.substring(len2 + 5, s.length); // plus 5 to skip 'SQL: ' 
                         
-                        console.log(query);
+                        //console.log(query);
                         let query_list = [];
                         query_list.push(query);
 
@@ -425,9 +500,9 @@ class Tree{
             
                 }    
                 else {            
-                    let {val, ifCheckbox, unique_id} = decision_node(arr, id, str[ids], true, true);
+                    let {val, ifCheckbox, unique_id} = decision_node(this.arr, ids, this.str[ids], true, true);
                     node.template = val;
-                    node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                    node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, this.bx, this.by);
                     node.id = ids;
                     // node.setLocked(true);
                     // node.setVisible(false);
@@ -446,9 +521,9 @@ class Tree{
                     // createAnimatedLink(originNode, node);
                     
                     // submit the checkbox answers
-                    if(arr[id].length > 5) {
+                    if(this.arr[id].length > 5) {
                         let o = document.getElementById("cb-button");
-                        console.log("check o: " + o);
+                        //console.log("check o: " + o);
                         this.currId = id;
                         this.currOriginNode = node;
                         o.onclick = checkboxAnswers;
@@ -456,7 +531,7 @@ class Tree{
 
                     // create a larger decision tree for the new input file
                     if(s.includes("DECISIONTREE") && this.ifNewInput == 'yes') {
-                        console.log("reach decisiontree");
+                        //console.log("reach decisiontree");
                         this.newInput(dtlink, id, true, i);
                         this.ifNewInput = JSON.parse(localStorage.getItem("ifNewInput"));
                     }
@@ -504,11 +579,11 @@ class Tree{
         layout.levelDistance = 10;
         // linkType = MindFusion.Graphs.TreeLayoutLinkType.Cascading;
 
-        if (arr[id].length > 0) {
-            for (let i = 0; i < arr[id].length; i++) {
+        if (this.arr[id].length > 0) {
+            for (let i = 0; i < this.arr[id].length; i++) {
                 if(results.includes(i)) {
                     let node = new this.ControlNode(this.diagramView);
-                    let ids = arr[id][i];
+                    let ids = this.arr[id][i];
                     this.currTreeIdList.push(parseInt(ids));
 
                     let len = this.str[ids].search(',');
@@ -536,7 +611,7 @@ class Tree{
                         // We need this myCallback function because the code in ajax runs asynchronously. 
                         // We use this function to help receive the result from python
                         function myCallback(sql_result) {
-                            console.log("check sql_result[1]: "  + sql_result[1]);
+                            //console.log("check sql_result[1]: "  + sql_result[1]);
     
                             let sql_result_list = [];
                             let hasResult = true;
@@ -548,14 +623,14 @@ class Tree{
                                     break; // that means there is no result
                                 }
                                 let test = sql_result[1].substring(len3 + 1, len4).split(', ');
-                                console.log("test: " + test);
+                                //console.log("test: " + test);
                                 sql_result_list.push(test);
                                 sql_result[1] = sql_result[1].substring(len4 + 1, sql_result[1].length);
-                                console.log("check sql_result for each loop: " + sql_result[1]);
+                                //console.log("check sql_result for each loop: " + sql_result[1]);
                             }
     
                             if(hasResult == true) {
-                                console.log("check sql_result_list: " + sql_result_list[0]);
+                                //console.log("check sql_result_list: " + sql_result_list[0]);
                                 let ifPlural1 = sql_result_list.length > 1 ? "houses " : "house ";
                                 let ifPlural2 =  sql_result_list.length > 1 ? "meet " : "meets ";
                                 let ifPlural3 =  sql_result_list.length > 1 ? "are " : "is ";
@@ -572,14 +647,14 @@ class Tree{
                             }
     
     
-                            console.log("check s in get_sql_result: " + s);
+                            //console.log("check s in get_sql_result: " + s);
     
                             // str[ids]
                             // let val = `<div id="d1"><p>` + s + `</p></div>`;
-                            let showResult = str[ids].substring(0, len + 2) + s;
-                            let {val, ifCheckbox, unique_id} = decision_node(arr, ids, showResult);
+                            let showResult = this.str[ids].substring(0, len + 2) + s;
+                            let {val, ifCheckbox, unique_id} = decision_node(this.arr, ids, showResult);
                             node.template = val;
-                            node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                            node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, this.bx, this.by);
                             node.id = ids;
                             node.stroke  = '#003466';
                             this.diagram.addItem(node);
@@ -600,7 +675,7 @@ class Tree{
                         function get_sql_result(callback) { 
                             let len2 = s.search('SQL:');
                             let query = s.substring(len2 + 5, s.length); // plus 5 to skip 'SQL: ' 
-                            console.log(query);
+                            //console.log(query);
                             let query_list = [];
                             query_list.push(query);
                             let query_dic = Object.assign({}, query_list);
@@ -615,9 +690,9 @@ class Tree{
                         }
                     }
                     else {
-                        let {val, ifCheckbox, unique_id} = decision_node(arr, ids, str[ids]);
+                        let {val, ifCheckbox, unique_id} = decision_node(this.arr, ids, this.str[ids]);
                         node.template = val;
-                        node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, bx, by);
+                        node.bounds = new Rect(originNode.bounds.x, originNode.bounds.y + 60, this.bx, this.by);
                         node.id = ids;
                         // node.setLocked(true);
                         // node.setVisible(false);
@@ -635,8 +710,8 @@ class Tree{
     
                         // create a larger decision tree for the new input file
                         if(s.includes("DECISIONTREE") && this.ifNewInput == 'yes') {
-                            console.log("reach decisiontree");
-                            newInput(dtlink, id, true, i);
+                            //console.log("reach decisiontree");
+                            this.newInput(dtlink, id, true, i);
                             this.ifNewInput = JSON.parse(localStorage.getItem("ifNewInput"));
                         }
                     
@@ -656,7 +731,7 @@ class Tree{
         
         let ep = link.endPoint;
         link.endPoint = link.startPoint;
-        let animation = new Animation(link, { fromValue: link.startPoint, toValue: ep, animationType: AnimationType.Bounce, easingType: EasingType.EaseOut, duration: 1000 }, onUpdateLink);
+        let animation = new Animation(link, { fromValue: link.startPoint, toValue: ep, animationType: AnimationType.Bounce, easingType: EasingType.EaseOut, duration: 1000 }, this.onUpdateLink);
         
         animation.addEventListener(AnimationEvents.animationComplete, function (sender, args) {
             node.visible = true;
@@ -704,20 +779,20 @@ class Tree{
 
     printPath(parent_id, child_id, ifsure){
         let save_path = []
-        console.log("Path(from root to curr): " + this.str_hyphens[parent_id] + "\n");
+        //console.log("Path(from root to curr): " + this.str_hyphens[parent_id] + "\n");
         save_path.push(this.str_hyphens[parent_id]);
 
         if(ifsure == true) {
             // we only print the child when the child is the leaf
             if(this.arr[child_id] != undefined && this.arr[child_id].length == 0) {
-                console.log("Path(from root to curr): " + this.str_hyphens[child_id] + "\n");
+                //console.log("Path(from root to curr): " + this.str_hyphens[child_id] + "\n");
                 save_path.push(this.str_hyphens[child_id]);
             }
         }
         else if(ifsure == false) {
             if(this.arr[parent_id].length != 0) {
                 for(let i = 0; i < this.arr[parent_id].length; i++) {
-                    console.log("Path(from root to curr): " + this.str_hyphens[this.arr[parent_id][i]] + "\n");
+                    //console.log("Path(from root to curr): " + this.str_hyphens[this.arr[parent_id][i]] + "\n");
                     save_path.push(this.str_hyphens[child_id]);
                 }
             }
@@ -757,14 +832,14 @@ class Tree{
     }
 
     subtree(ifPrint, node_id){
-        if(node_id < arr.length && this.arr[node_id].length == 0) {
+        if(node_id < this.arr.length && this.arr[node_id].length == 0) {
             return;
         }
         else if(node_id < this.arr.length) {
             for(let j = 0; j < this.arr[node_id].length; j++) {
                 if(ifPrint == true) {
                     // print out the subtree
-                    console.log(this.str_hyphens[this.arr[node_id][j]]);
+                    //console.log(this.str_hyphens[this.arr[node_id][j]]);
                 }
     
                 this.path_subtree.push(this.str_hyphens[this.arr[node_id][j]]);
@@ -795,18 +870,23 @@ class Tree{
             text.innerHTML = 'Only one box containing the keyword: <br>';
             text.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font> <br><br>';
             // for checking the first option
-            text.innerHTML += str[result[0]] + '<input name="search_result" type="radio" value="'+ result[0] +'" checked> <br>';
+            text.innerHTML += this.str[result[0]] + '<input name="search_result" type="radio" value="'+ result[0] +'" checked> <br>';
         }else {
-            text.innerHTML = '<br>Please click "Expand" button to see the result from each group<br><br>' ;
-            text.innerHTML += "<input onclick=" + "DecisionTree.showOrHideResultsX(result)" + " type='button' value='Expand'/>";
-            text.innerHTML += '<div id="alreadyVisited">Boxes in tree so far: </div><br>';
-            text.innerHTML += "<input onclick=" + "DecisionTree.showOrHideResultsY(result)" + "  type='button' value='Expand'/>";
-            text.innerHTML += '<div id="reachable">Boxes reachable from current tree: </div><br>';
+            // text.innerHTML = '<br>Please click "Expand" button to see the result from each group<br><br>' ;
+            // text.innerHTML += "<input onclick=" + "DecisionTree.showOrHideResultsX(result)" + " type='button' value='Expand'/>";
+            console.log(result);
+            this.showOrHideResultsX(result);
+           
+            // text.innerHTML = '<div id="alreadyVisited">Boxes in tree so far: </div><br>';
+            this.showOrHideResultsY(result);
+            // text.innerHTML += "<input onclick=" + "DecisionTree.showOrHideResultsY(result)" + "  type='button' value='Expand'/>";
+            // text.innerHTML += '<div id="reachable">Boxes reachable from current tree: </div><br>';
             
             this.pathAndSubtree = []; // empty the pathAndSubtree
 
-            text.innerHTML += "<input onclick=" + "DecisionTree.showOrHideResultsZ(result)" + "  type='button' value='Expand'/>";
-            text.innerHTML += '<div id="otherNodes">Other boxes: </div><br>';
+            this.showOrHideResultsZ(result);
+            // text.innerHTML += "<input onclick=" + "DecisionTree.showOrHideResultsZ(result)" + "  type='button' value='Expand'/>";
+            // text.innerHTML += '<div id="otherNodes">Other boxes: </div><br>';
         }
         
         text.classList.remove('hide');
@@ -973,88 +1053,106 @@ class Tree{
 
     showOrHideResultsX(result){
         let x = document.getElementById("alreadyVisited");
-        if(x.textContent === "Boxes in tree so far: ") {
+        x.classList.remove("remove-result");
+        // if(x.textContent === "Boxes in tree so far") {
             x.innerHTML += '<br>';
-            x.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font> <br><br>';
+            // x.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font> <br><br>';
         
             let hasResult = false;
             for(let i = 0; i < result.length; i++) {
                 if(this.currTreeIdList.includes(result[i])) {
-                    console.log(this.currTreeIdList[i]);
-                    x.innerHTML += this.str[result[i]] + '<input name="search_result" type="radio" value="'+ result[i] +'"> <br> ';
+                    ////console.log(this.currTreeIdList[i]);
+                    x.innerHTML += "<div class='result-card'  onclick=DecisionTree.activateCheckbox(this)><p>"+this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br> ';
                     hasResult = true;
                 }
             }
 
             if ($('input[name=search_result]:checked').length > 0) {
-                console.log("reach");
+                ////console.log("reach");
                 this.ifClickedRadio = true; 
             }   
 
             if(hasResult == false) {
-                x.innerHTML += "No Result";
+                // x.innerHTML += "<div class='result-card'><p>No Result</p></div>";
+                x.innerHTML = "";
+                x.classList.add('remove-result');
             }
-        }
-        else {
-            x.innerHTML = "Boxes in tree so far: ";
-        }
+        // }
+        // else {
+        //     x.innerHTML = "Boxes in tree so far";
+        // }
     }
 
     showOrHideResultsY(result){
         let y = document.getElementById("reachable");
-        if(y.textContent === "Boxes reachable from current tree: ") {
+        y.classList.remove("remove-result");
+        // if(y.textContent === "Boxes reachable from current tree") {
             y.innerHTML += '<br>';
-            y.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font> <br><br>';
-
+            // y.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font> <br><br>';
             let hasResult = false;
             this.subtree(false, this.currTreeIdList[this.currTreeIdList.length - 1]);        
             for(let i = 0; i < result.length; i++) {
                 if(this.pathAndSubtree.includes(result[i])) {
-                    y.innerHTML += this.str[result[i]] + '<input name="search_result" type="radio" value="'+ result[i] +'"> <br> ';
+                    y.innerHTML += "<div class='result-card'  onclick=DecisionTree.activateCheckbox(this)><p>"+this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br> ';
                     hasResult = true;
                 }
             }
 
             if ($('input[name=search_result]:checked').length > 0) {
-                console.log("reach");
+                ////console.log("reach");
                 this.ifClickedRadio = true; 
             }   
 
             if(hasResult == false) {
-                y.innerHTML += "No Result";
+                // y.innerHTML += "<div class='result-card'><p>No Result</p></div>";
+                y.innerHTML = "";
+                y.classList.add('remove-result');
             }
-        }
-        else {
-            y.innerHTML = "Boxes reachable from current tree: ";
-        }
+        // }
+        // else {
+        //     y.innerHTML = "Boxes reachable from current tree";
+        // }
     }
 
     showOrHideResultsZ(result){
         let z = document.getElementById("otherNodes");
-        if(z.textContent === "Other boxes: ") {
+        z.classList.remove("remove-result");
+        // if(z.textContent === "Other boxes") {
             z.innerHTML += '<br>';
-            z.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font><br><br>';
+            // z.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font><br><br>';
 
             let hasResult = false;
             for(let i = 0; i < result.length; i++) {
                 if(this.currTreeIdList.includes(result[i]) == false && this.pathAndSubtree.includes(result[i]) == false) {
-                    z.innerHTML += this.str[result[i]] + '<input name="search_result" type="radio" value="'+ result[i] +'"> <br>';
+                    z.innerHTML += "<div class='result-card' onclick=DecisionTree.activateCheckbox(this) ><p>" + this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br>';
                     hasResult = true;
                 }
             }
             
             if ($('input[name=search_result]:checked').length > 0) {
-                console.log("reach");
+                ////console.log("reach");
                 this.ifClickedRadio = true; 
             }   
 
             if(hasResult == false) {
-                z.innerHTML += "No Result";
+                // z.innerHTML += "<div class='result-card'><p>No Result</p></div>";
+                z.innerHTML = "";
+                z.classList.add('remove-result');
             }
-        }
-        else {
-            z.innerHTML = "Other boxes: ";
-        }
+        // }
+        // else {
+        //     z.innerHTML = "Other boxes";
+        // }
+    }
+
+    activateCheckbox(container){
+        let checkbox = container.querySelector('input[type="radio"]');
+        checkbox.click();
+        this.checkRadioButton();
+    }
+
+    atLeastOneRadio(){
+        return ($('input[type=radio]:checked').length > 0);
     }
 
     checkRadioButton(){
@@ -1070,22 +1168,17 @@ class Tree{
             for(let i = 0; i < ifSubtree.length; i++) {
                 if(ifSubtree[i].checked) {
                     localStorage.setItem("ifSubtree", JSON.stringify(ifSubtree[i].value));
-        
                 }
             }
             localStorage.setItem("ifSearch", JSON.stringify('yes'));
-            
-            // render_tree();
-            // window.location.href = "tree.html"; 
+            this.render();
         }
-    }
-
-    atLeastOneRadio(){
-        return ($('input[type=radio]:checked').length > 0);
     }
 }
 
 let selectClick = (e, sender) =>
     DecisionTree.selectClick(e, sender);
-let onUpdateLink = (animation, animationProgress)=>
-    DecisionTree.onUpdateLink(animation, animationProgress);
+
+// window.addEventListener('DOMContentLoaded', ()=>{
+//     window.setInterval(DecisionTree.checkRadioButton(), 1000);
+// })

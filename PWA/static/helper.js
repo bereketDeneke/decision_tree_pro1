@@ -1,10 +1,11 @@
 function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
     let unique_id = "id_"+Math.floor(Math.random()*(10**12));
+    let str = DecisionTree.str;
     let val = `<div id="d1" data-modal-id="${id}" style="
                     background-color: #f3b058 !important;
                     width: 100%;
                     cursor: pointer;
-                    margin-bottom: 7px;" uid="${unique_id}" onclick=openModal(this) ontouchstart=openModal(this)>
+                    margin-bottom: 7px;" uid="${unique_id}" ontouchend=openModal(this)>
                     <p> ${s} </p>
                 </div>`;
             
@@ -15,7 +16,7 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
                             <option value="none" selected></option>`;
         for (var i = 0; i < arr[id].length; i++) {
             
-            len1 = str[arr[id][i]].search(',');
+            let len1 = str[arr[id][i]].search(',');
             s1 = str[arr[id][i]].substring(3, len1);
             val += `<option value=` + arr[id][i] + `>` + s1 + `</option>`;
         }
@@ -25,7 +26,7 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
         ifCheckbox = true;
         val += '<form action="#" method="post" id="checkbox_form"">';
         for (var i = 0; i < arr[id].length; i++) {
-            len1 = str[arr[id][i]].search(',');
+            let len1 = str[arr[id][i]].search(',');
             s1 = str[arr[id][i]].substring(3, len1);
             val += `<div class="checkbox">
                         <label><input type="checkbox" value="${arr[id][i]}">${s1}</label>
@@ -42,45 +43,67 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
 var modal = document.querySelector('ion-modal');
   // let is_maximized = false;
 
-  function dismiss() {
+function dismiss() {
     modal.isOpen = false;
     modal.canDismiss = true;
     let update = document.querySelector('#curr_options');
-    update.remove();
+    if(update)
+        update.remove();
     modal.dismiss();
-  }
-  
-  async function Toast(msg) {
-    const notification = document.querySelector("#toast_container");
-    notification.querySelector("label").innerText = msg;
-    notification.classList.add('error');
-    setTimeout(()=>{
-      // remove the class 
-      notification.classList.remove('error');
-    }, 1000);
-  }
+}
 
-  const searchInput = document.querySelector('ion-searchbar');
-  searchInput.addEventListener('keyup', (e)=>{
-    if(e.code == "Enter"){
-        searchInput.querySelector("input").id = "input";
-        DecisionTree.input_search();
+async function Toast(msg) {
+const notification = document.querySelector("#toast_container");
+notification.querySelector("label").innerText = msg;
+notification.classList.add('error');
+setTimeout(()=>{
+    // remove the class 
+    notification.classList.remove('error');
+}, 1000);
+}
+
+const searchInput = document.querySelector('ion-searchbar');
+let cancelButton = undefined;
+
+function exc_search() {
+    searchInput.querySelector("input").id = "input";
+    DecisionTree.input_search();
+}
+
+
+searchInput.addEventListener('keydown', (e)=>{
+    if(e.keyCode==13 || e.code == "Enter"){
+        exc_search();
     }
-  });
 
+    if(cancelButton == undefined){
+        cancelButton = searchInput.querySelector("button");
+        cancelButton.addEventListener("click", ()=>{
+            document.querySelector(".search-results").classList.remove("show");
+            document.querySelector(".search-results").classList.add("hide");
+        });
+    }
+});
 
-
+let lastTouchEnd = 0;
 function openModal(header){
-    console.log("header: "+header);
+    const now = (new Date()).getTime();
+    if(now - lastTouchEnd > 300) {
+        lastTouchEnd = now;
+        return;
+    }
+    
     if(header == null || header == undefined) return false;
-
     // Initialize the necessary variables 
     const node = header.parentNode;
     const id = header.getAttribute('data-modal-id'); 
     const question = header.textContent;
     let pResponse = node.querySelector('select'); // possible responses for the question
     let is_form = false;
+    const question_el = document.querySelector('#_question');
+    question_el.textContent = question;
 
+    try{
     if(pResponse == null){
         is_form = true;
         pResponse = node.querySelector('form'); 
@@ -92,9 +115,7 @@ function openModal(header){
     }
 
     // UI
-    const question_el = document.querySelector('#_question');
     const modal_container = document.querySelector('.node_display');
-    question_el.textContent = question;
 
     // if(!is_form){
         const choices = document.createElement('div');
@@ -155,6 +176,10 @@ function openModal(header){
         });
         modal_container.appendChild(choices);
     // }
+    }catch(e){
+        //pass
+    }
+
     modal.canDismiss = false;
     modal.isOpen = true;
 }
