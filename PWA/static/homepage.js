@@ -20,6 +20,8 @@ var vec;
 var bx = 50, by = 40;
 var diagram = null;
 let textArea = "";
+DecisionTree = new Tree();
+
 
 // var input1 = document.querySelector('input');
 // var textarea = document.querySelector('textarea');
@@ -43,6 +45,11 @@ attach.addEventListener('change', () => {
 	reader.onerror = (e) => Toast(e.target.error.name);
 	reader.readAsText(file);
 });
+
+window.addEventListener('DOMContentLoaded', ()=>{
+	const node = document.querySelector('#firstElement');
+	loadTree(node);
+})
 
 function cleanCanvas(){
 	const canvas = document.getElementById('diagram');
@@ -90,8 +97,8 @@ function input() {
 
 	n = str.length;
 
-	// console.log("test str in hos: " + str);
-	// console.log("test str_hyphens in hos: " + str_hyphens);
+	// ///console.log("test str in hos: " + str);
+	// ///console.log("test str_hyphens in hos: " + str_hyphens);
 	vec = new Array(n);
 	obj = new Array(n);
 	for (var i = 0; i < obj.length; i++) {
@@ -99,12 +106,12 @@ function input() {
 		arr[i] = new Array(0);
 	}
 
-	// console.log(n);
+	// ///console.log(n);
 
 	let p = 3;
 	let error = "";
 	let error_loc = 0;
-	// console.log(str[1]);
+	// ///console.log(str[1]);
 	for (var i = 0; i < n; i++) {
 		let size = 0;
 
@@ -117,14 +124,14 @@ function input() {
 		// count the number of hyphens of the next line
 		let next_size = 0;
 		if (i != n - 1) {
-			console.log("debugg i + 1: " + (i + 1));
+			///console.log("debugg i + 1: " + (i + 1));
 			for (var j = 0; j < str[i + 1].length; j++) {
 				if (str[i + 1][j] != '-') break;
 				else next_size++;
 			}
 		}
 
-		// console.log(size);
+		// ///console.log(size);
 		vec[size / 2] = i;
 		if (size == 0) {
 			p++;
@@ -192,7 +199,7 @@ function input() {
 
 			arr[vec[(size / 2) - 1]].push(i);
 		}
-		// console.log(size);
+		// ///console.log(size);
 		let len = str[i].length;
 		// let s = str[i].search(',');
 
@@ -211,7 +218,7 @@ function input() {
 				if(str[arr[i][j]] != undefined) {
 					childList.push(str[arr[i][j]]);
 				}
-				console.log("check str[arr[i][j]]: " + str[arr[i][j]]);
+				///console.log("check str[arr[i][j]]: " + str[arr[i][j]]);
 			}
 		}
 		
@@ -231,7 +238,7 @@ function input() {
 	localStorage.setItem("ifSearch", JSON.stringify('no'));
 	//document.location.href = "tree.html";
 	if(error == '') {
-		render_tree();
+		DecisionTree.render();
 	}
 	else {
 		// jump(error_loc);
@@ -282,7 +289,7 @@ function cart(cart_str) {
 			else next_size++;
 		}
 
-		console.log("check size: " + size);
+		///console.log("check size: " + size);
 		if(cart_str[i + 1].includes("class")) {
 			new_line = new_line + cart_str[i + 1].substring(next_size, cart_str[i + 1].length);
 			i += 1;
@@ -297,7 +304,7 @@ function cart(cart_str) {
 	}
 
 	for(let i = 0; i < new_str.length; i++) {
-		console.log("check new_str: " + new_str[i]);
+		///console.log("check new_str: " + new_str[i]);
 	}
 	
 	return new_str;

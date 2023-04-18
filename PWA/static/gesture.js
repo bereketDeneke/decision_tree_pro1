@@ -32,14 +32,14 @@ function zoomOut(ele){
   }
 }
 // Function to prevent pinch and mouse scroll event
-function preventScaling(event) {
-  if (event.ctrlKey === true || event.metaKey) {
-    event.preventDefault();
-  }
-}
+// function preventScaling(event) {
+//   if (event.ctrlKey === true || event.metaKey) {
+//     event.preventDefault();
+//   }
+// }
 
-// Attach the preventScaling function to the "wheel" event on the window
-window.addEventListener('wheel', preventScaling, { passive: false });
+// // Attach the preventScaling function to the "wheel" event on the window
+// window.addEventListener('wheel', preventScaling, { passive: false });
 
-// Attach the preventScaling function to the "touchmove" event on the document
-document.addEventListener('touchmove', preventScaling, { passive: false });
+// // Attach the preventScaling function to the "touchmove" event on the document
+// document.querySelector().addEventListener('touchmove', preventScaling, { passive: false });

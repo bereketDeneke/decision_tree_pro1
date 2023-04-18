@@ -32,7 +32,7 @@
               <ion-list>
                 <ion-list-header> Choose Topic </ion-list-header>
                 <ion-menu-toggle auto-hide="false">
-                  <ion-item button expand="block" data-url="https://elliot2878.github.io/decision_tree.github.io/myeloma.txt" onclick="loadTree(this)">
+                  <ion-item button expand="block" id="firstElement" data-url="https://elliot2878.github.io/decision_tree.github.io/myeloma.txt" onclick="loadTree(this)">
                       <ion-icon name="document-text-outline"></ion-icon>
                       <!-- <ion-icon slot="start" name="setting"></ion-icon> -->
                       <ion-label>Myeloma</ion-label>
@@ -89,12 +89,12 @@
               <!-- <h1>Main Content</h1> -->
               <!-- <ion-item> -->
                 <div class="row">
-                  <div style="position: absolute; top: 20px; left:10px; right: 10px; bottom: 10px; overflow: auto;border: 25px;">
-                      <canvas id="diagram" style="width: max-content; height: max-content;">
+                  <div style="position: absolute; overflow: hidden; top: 20px; left:10px; right: 10px; bottom: 10px; border: 25px;">
+                      <canvas id="diagram" width="400" height="500">
                           This page requires a browser that supports HTML 5 Canvas element.
                       </canvas>
                   </div>
-              </div>
+                </div>
                   <!-- <div id="zoom_control" class="buttons">
                     <button ion-button icon-only onclick="zoomIn(this)">
                       <ion-icon name="add"></ion-icon>
@@ -109,7 +109,8 @@
             <ion-footer>
               <ion-toolbar>
                 <div class="button-group">
-                  <ion-searchbar (ionInput)="onSearch($event.target.value)" placeholder="Search" color="primary" searchIcon="search"></ion-searchbar>
+                  <!-- <ion-searchbar (ionInput)= "onSearch($event.target.value)" placeholder="Search" color="primary" searchIcon="search"></ion-searchbar> -->
+                  <ion-searchbar placeholder="Search" color="primary" searchIcon="search"></ion-searchbar>
                   <ion-button onclick="upload_file()">
                     <ion-icon name="attach-outline"></ion-icon>
                     <input id='file_attach' type='file' accept="text/*" hidden/>
@@ -118,6 +119,17 @@
                   <!-- <ion-button onclick="fresh_start()">
                     <ion-icon name="refresh-circle-outline"></ion-icon>
                   </ion-button> -->
+                </div>
+
+                <div class="search-results hide" id="result" style="overflow-y: auto; overflow-x: hidden;">
+                  <!-- search results here -->
+                  <!-- <div id="alreadyVisited">Boxes in tree so far</div><br>
+                  <div id="reachable">Boxes reachable from current tree</div><br>
+                  <div id="otherNodes">Other boxes</div><br> -->
+                  
+                  <div id="alreadyVisited"></div><br>
+                  <div id="reachable"></div><br>
+                  <div id="otherNodes"></div><br>
                 </div>
               </ion-toolbar>
             </ion-footer>
@@ -152,7 +164,7 @@
       
       <!-- Toast notification -->
       <center>
-        <div id="toast_container" class="">
+        <div id="toast_container" class="toast-message">
           <label for="msg"></label>
         </div>
       </center>
@@ -203,18 +215,6 @@
 
   }
 
-  #toast_container{
-    bottom: 20%;
-    position: fixed;
-    background-color: rgba(144, 186, 238, 0.697);
-    box-shadow:0 10px 25px rgba(124, 130, 141, 0.2);
-    padding: 3px;
-    border-radius: 8px;
-    opacity: 0;
-    z-index: 10000000;
-    visibility: hidden;
-  }
-
 .active{
     animation: fade 8s;
     animation-timing-function:ease-in-out;
@@ -235,6 +235,7 @@
 
     }
   }
+  
   .resize{
     width:100% !important;
     height:100% !important;
@@ -337,79 +338,4 @@
 }
 
 </style>
-
-<script>
-  var modal = document.querySelector('ion-modal');
-  // let is_maximized = false;
-
-  function dismiss() {
-    modal.isOpen = false;
-    modal.canDismiss = true;
-    let update = document.querySelector('#curr_options');
-    update.remove();
-    modal.dismiss();
-  }
-
-  // function show_overview(elem, is_visible) {
-  //   const overiew_cont = document.querySelector('.overview_container');
-  //   if (is_visible){
-  //     overiew_cont.classList.remove('fade');
-  //     overiew_cont.removeAttribute('hidden');
-  //   }else{
-  //     overiew_cont.classList.add('fade');
-  //     setTimeout(()=>{
-  //       overiew_cont.setAttribute('hidden', true);
-  //     }, 50);
-  //   }
-  // }
-  
-  // function resize() {
-  //   const overview_cont = document.querySelector(".overview_container");
-  //   if(!is_maximized){
-  //     overview_cont.classList.remove("shrink");
-  //     overview_cont.classList.add("resize");
-  //   }else{
-  //     overview_cont.classList.remove("resize");
-  //     overview_cont.classList.add("shrink");
-  //   }
-  //   update_overview();
-  //   is_maximized = Boolean(is_maximized^1);
-  // }
-
-  async function Toast(msg) {
-    const notification = document.querySelector("#toast_container");
-    notification.querySelector("label").innerText = msg;
-    notification.classList.add('active');
-    setTimeout(()=>{
-      // remove the class 
-      notification.classList.remove('active');
-    }, 8000);
-  }
-
-  const searchInput = document.querySelector('ion-searchbar');
-  searchInput.addEventListener('ionChange', (e)=>{
-    let val = e.target.value;
-    let nodes = document.querySelectorAll('.mf_diagram_controlNodeContent');
-    nodes.forEach(node=>{
-      if(val.trim().length !== 0 && node.textContent.toLowerCase().includes(val.toLowerCase()))
-        node.classList.add('selected_item');
-      else
-        node.classList.remove('selected_item');
-    });
-  });
-
-
-  // //todo: add listeners for volume up and down events 
-  // function onLoad() {
-  //       document.addEventListener("deviceready", onDeviceReady, false);
-  //   }
-
-  //   function onDeviceReady() {
-  //       // Register the event listener
-  //       alert("deviceready");
-  //       document.addEventListener("volumeupbutton", zoomIn, false);
-  //       document.addEventListener("volumedownbutton", zoomOut, false);
-  //   }
-
-  </script>
 </html>
