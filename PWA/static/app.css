@@ -329,7 +329,7 @@
 
 .result-card p {
   margin: 0;
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis; */
   word-break: keep-all !important; /* add word-break property */
   flex-grow: 1; /* expand to fill available space */
 }
