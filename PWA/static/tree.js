@@ -874,7 +874,6 @@ class Tree{
         }else {
             // text.innerHTML = '<br>Please click "Expand" button to see the result from each group<br><br>' ;
             // text.innerHTML += "<input onclick=" + "DecisionTree.showOrHideResultsX(result)" + " type='button' value='Expand'/>";
-            console.log(result);
             this.showOrHideResultsX(result);
            
             // text.innerHTML = '<div id="alreadyVisited">Boxes in tree so far: </div><br>';
@@ -1051,6 +1050,10 @@ class Tree{
         this.showCheckbox(this.currId, this.currOriginNode, results);
     }
 
+    checkIfTheContentExists(content){
+        return document.getElementById('result').textContent.includes(content);
+    }
+
     showOrHideResultsX(result){
         let x = document.getElementById("alreadyVisited");
         x.classList.remove("remove-result");
@@ -1060,7 +1063,7 @@ class Tree{
         
             let hasResult = false;
             for(let i = 0; i < result.length; i++) {
-                if(this.currTreeIdList.includes(result[i])) {
+                if(this.currTreeIdList.includes(result[i]) && !this.checkIfTheContentExists(this.str[result[i]])) {
                     ////console.log(this.currTreeIdList[i]);
                     x.innerHTML += "<div class='result-card'  onclick=DecisionTree.activateCheckbox(this)><p>"+this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br> ';
                     hasResult = true;
@@ -1092,14 +1095,13 @@ class Tree{
             let hasResult = false;
             this.subtree(false, this.currTreeIdList[this.currTreeIdList.length - 1]);        
             for(let i = 0; i < result.length; i++) {
-                if(this.pathAndSubtree.includes(result[i])) {
+                if(this.pathAndSubtree.includes(result[i]) && !this.checkIfTheContentExists(this.str[result[i]])) {
                     y.innerHTML += "<div class='result-card'  onclick=DecisionTree.activateCheckbox(this)><p>"+this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br> ';
                     hasResult = true;
                 }
             }
 
             if ($('input[name=search_result]:checked').length > 0) {
-                ////console.log("reach");
                 this.ifClickedRadio = true; 
             }   
 
@@ -1123,7 +1125,7 @@ class Tree{
 
             let hasResult = false;
             for(let i = 0; i < result.length; i++) {
-                if(this.currTreeIdList.includes(result[i]) == false && this.pathAndSubtree.includes(result[i]) == false) {
+                if(this.currTreeIdList.includes(result[i]) == false && this.pathAndSubtree.includes(result[i]) == false  && !this.checkIfTheContentExists(this.str[result[i]])) {
                     z.innerHTML += "<div class='result-card' onclick=DecisionTree.activateCheckbox(this) ><p>" + this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br>';
                     hasResult = true;
                 }
