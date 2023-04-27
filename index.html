@@ -14,6 +14,7 @@
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <!-- Latest compiled and minified JavaScript -->
+      <link rel="shortcut icon" href="./PWA/DecisionTreeLogo.png">
       <link rel="stylesheet" href="./PWA/static/app.css">
       <link rel="stylesheet" href="./PWA/static/modal.css" type="text/css" />
 
@@ -83,8 +84,28 @@
                   </ion-menu-toggle>
                 </ion-buttons>
                 <ion-title id="Screen_Title">Decision Tree</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button color="secondary" onclick="DecisionTree.save()">
+                    <ion-icon slot="icon-only" name="save"></ion-icon>
+                  </ion-button>
+                  <ion-button onclick="openSavedInstances(this)">
+                    <ion-icon color="tertiary" slot="icon-only" color="" name="time"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
               </ion-toolbar>
             </ion-header>
+            <!-- <ion-header>
+              <ion-toolbar>
+                <ion-buttons slot="start">
+                  <ion-menu-toggle>
+                    <ion-button>
+                      <ion-icon slot="icon-only" color="" name="ellipsis-vertical-outline"></ion-icon>
+                    </ion-button>
+                  </ion-menu-toggle>
+                </ion-buttons>
+                <ion-title id="Screen_Title">Decision Tree</ion-title>
+              </ion-toolbar>
+            </ion-header> -->
             <ion-content class="ion-padding">
               <!-- <h1>Main Content</h1> -->
               <!-- <ion-item> -->
@@ -127,7 +148,7 @@
                   <div id="reachable">Boxes reachable from current tree</div><br>
                   <div id="otherNodes">Other boxes</div><br> -->
                   
-                  <div id="alreadyVisited"></div><br>
+                  <!-- <div id="alreadyVisited"></div><br> -->
                   <div id="reachable"></div><br>
                   <div id="otherNodes"></div><br>
                 </div>
@@ -146,7 +167,7 @@
           </ion-page>
         </ion-app>
         
-        <ion-modal>
+        <ion-modal id="NodeOverviewModal">
             <div class="header_cont">
               <ion-toolbar  color="primary">
                 <ion-title>Current Node</ion-title>
@@ -160,6 +181,41 @@
           </ion-content>
           
           <!-- <ion-button hidden onclick=next_modal()>Next</ion-button> -->
+        </ion-modal>
+
+        <ion-modal id="SavedInstancesModal">
+          <div class="header_cont">
+            <ion-toolbar  color="primary">
+              <ion-title>History</ion-title>
+              <ion-buttons slot="end">
+                <ion-button color="light" onclick=dismissInstanceModal()>Close</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </div>
+            <ion-content>
+              <div style="height: 100%; display: flex; flex-wrap: nowrap;">
+                <div class="instanceNameContainer" style="background: #d4bf95; height: 100%; flex: 0 0 33.33%; overflow-y: scroll;">
+                  <!-- Content of the first instance goes here -->
+                </div>
+                <div class="instanceContentContainer" style="background: bisque; flex: 0 0 66.67%; overflow-x: auto;"> 
+                  <div class="controller" style="position:fixed; float: right; right: 0px;">
+                    <ion-button fill="clear" id="renderInstance" size="small" slot="end" style="position: absolute; top: 0; right: 0; color: green;">
+                      <ion-icon name="play"></ion-icon>
+                    </ion-button>
+                  
+                    <ion-button fill="clear" size="small" slot="end" style="position: absolute; top: 0; right: 2rem; color: red;" id="removeInstance">
+                      <ion-icon name="trash"></ion-icon>
+                    </ion-button>
+                  </div>
+                
+                  <div id="instancecontainer" style="overflow-x: auto; overflow-y: auto;">
+                    <!-- Content of the second instance goes here -->
+                  </div>
+                </div>
+              </div>
+              
+          
+            </ion-content>
         </ion-modal>
       
       <!-- Toast notification -->
