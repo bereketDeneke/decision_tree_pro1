@@ -142,7 +142,6 @@ class Tree{
                 if(this.DTree == null || val == undefined || this.autoDraw == false)
                     return false;
                 
-                console.log("jere");
                 const node = e.node.content;
                 const selectInput = node.querySelector("select");
                 selectInput.value = val;
