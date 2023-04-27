@@ -1,6 +1,7 @@
 'use strict';
 class Tree{
     constructor(){
+        this.autoDraw = false;
         this.str = JSON.parse(localStorage.getItem("str-array"));
         this.str_hyphens = JSON.parse(localStorage.getItem("str-hyphens-array"));
         this.arr = JSON.parse(localStorage.getItem("arr-array"));
@@ -95,6 +96,7 @@ class Tree{
 
     __init__(){
         this.cleanCanvas();
+        this.DTree = JSON.parse(localStorage.getItem("DTree"));
         this.str = JSON.parse(localStorage.getItem("str-array"));
         this.str_hyphens = JSON.parse(localStorage.getItem("str-hyphens-array"));
         this.arr = JSON.parse(localStorage.getItem("arr-array"));
@@ -131,6 +133,24 @@ class Tree{
         this.currTreeIdList.push(0);
         this.diagramView = this.DiagramView.create(document.getElementById("diagram"));
         this.diagram = this.diagramView.diagram;
+
+        this.diagram.addEventListener("nodeDomCreated", (sender, e)=>{
+            try{
+                let idx = localStorage.getItem("idx"); // index
+                let val = this.DTree[parseInt(idx)]['path'][e.node.id];
+
+                if(this.DTree == null || val == undefined || this.autoDraw == false)
+                    return false;
+                
+                const node = e.node.content;
+                const selectInput = node.querySelector("select");
+                selectInput.value = val;
+                return true;
+            }catch(e){
+                console.warn("Caution: " + e.message);
+            }
+        });
+
         this.diagram.addEventListener("nodeActivated", function (sender, e) {
             if (e.node !== this.diagram.selection.items[0]) {
                 this.diagram.activeItem = this.diagram.selection.items[0];
@@ -542,8 +562,8 @@ class Tree{
 
     selectClick(e, sender){
         let selectControl = sender.content.getElementsByTagName("select")[0];
+        this.autoDraw = false;
         this.deleteNode(sender.id);
-        
         if (selectControl.value != "none" && selectControl.value != "NotSure") {
             if(this.str[selectControl.value] != undefined) {
                 this.nextoption(selectControl.value, sender); 
@@ -1055,31 +1075,31 @@ class Tree{
     }
 
     showOrHideResultsX(result){
-        let x = document.getElementById("alreadyVisited");
-        x.classList.remove("remove-result");
-        // if(x.textContent === "Boxes in tree so far") {
-            x.innerHTML += '<br>';
-            // x.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font> <br><br>';
+        // let x = document.getElementById("alreadyVisited");
+        // x.classList.remove("remove-result");
+        // // if(x.textContent === "Boxes in tree so far") {
+        //     x.innerHTML += '<br>';
+        //     // x.innerHTML += '<font size="-1"> (Choose at most one radio button. If you want to see the corresponding box, click one of the radio buttons below.) </font> <br><br>';
         
-            let hasResult = false;
-            for(let i = 0; i < result.length; i++) {
-                if(this.currTreeIdList.includes(result[i]) && !this.checkIfTheContentExists(this.str[result[i]])) {
-                    ////console.log(this.currTreeIdList[i]);
-                    x.innerHTML += "<div class='result-card'  onclick=DecisionTree.activateCheckbox(this)><p>"+this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br> ';
-                    hasResult = true;
-                }
-            }
+        //     let hasResult = false;
+        //     for(let i = 0; i < result.length; i++) {
+        //         if(this.currTreeIdList.includes(result[i]) && !this.checkIfTheContentExists(this.str[result[i]])) {
+        //             ////console.log(this.currTreeIdList[i]);
+        //             x.innerHTML += "<div class='result-card'  onclick=DecisionTree.activateCheckbox(this)><p>"+this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br> ';
+        //             hasResult = true;
+        //         }
+        //     }
 
-            if ($('input[name=search_result]:checked').length > 0) {
-                ////console.log("reach");
-                this.ifClickedRadio = true; 
-            }   
+        //     if ($('input[name=search_result]:checked').length > 0) {
+        //         ////console.log("reach");
+        //         this.ifClickedRadio = true; 
+        //     }   
 
-            if(hasResult == false) {
-                // x.innerHTML += "<div class='result-card'><p>No Result</p></div>";
-                x.innerHTML = "";
-                x.classList.add('remove-result');
-            }
+        //     if(hasResult == false) {
+        //         // x.innerHTML += "<div class='result-card'><p>No Result</p></div>";
+        //         x.innerHTML = "";
+        //         x.classList.add('remove-result');
+        //     }
         // }
         // else {
         //     x.innerHTML = "Boxes in tree so far";
@@ -1095,7 +1115,7 @@ class Tree{
             let hasResult = false;
             this.subtree(false, this.currTreeIdList[this.currTreeIdList.length - 1]);        
             for(let i = 0; i < result.length; i++) {
-                if(this.pathAndSubtree.includes(result[i]) && !this.checkIfTheContentExists(this.str[result[i]])) {
+                if(this.pathAndSubtree.includes(result[i])){// && !this.checkIfTheContentExists(this.str[result[i]])) {
                     y.innerHTML += "<div class='result-card'  onclick=DecisionTree.activateCheckbox(this)><p>"+this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br> ';
                     hasResult = true;
                 }
@@ -1125,7 +1145,7 @@ class Tree{
 
             let hasResult = false;
             for(let i = 0; i < result.length; i++) {
-                if(this.currTreeIdList.includes(result[i]) == false && this.pathAndSubtree.includes(result[i]) == false  && !this.checkIfTheContentExists(this.str[result[i]])) {
+                if(this.currTreeIdList.includes(result[i]) == false && this.pathAndSubtree.includes(result[i]) == false){// && !this.checkIfTheContentExists(this.str[result[i]])) {
                     z.innerHTML += "<div class='result-card' onclick=DecisionTree.activateCheckbox(this) ><p>" + this.str[result[i]] + '</p><input name="search_result" type="radio" value="'+ result[i] +'"></div> <br>';
                     hasResult = true;
                 }
@@ -1175,6 +1195,95 @@ class Tree{
             localStorage.setItem("ifSearch", JSON.stringify('yes'));
             this.render();
         }
+    }
+
+    generateRandomName(size = 7) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for ( let i = 0; i < size; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    save(){
+        try{
+            let diagramString = this.diagram.saveToString();
+            let nodePath = {};
+            
+            //save the diagram path to local storage
+            let nodes = this.diagram.nodes;
+            nodes.forEach(node=>{
+                try{
+                    let selectControl = node.content.getElementsByTagName("select")[0];
+                    nodePath[node.id] =  selectControl.value;
+                }catch(e){
+                    // leaf node doesn't have a select tag
+                }
+            });
+
+            let items = localStorage.getItem('DTree');
+            items = (items == undefined || items.trim().length == 0)? [] : items;
+            items = (typeof(items) !== "string")? items: JSON.parse(items);
+
+            let name = this.generateRandomName();
+            items.push({
+                [name]: diagramString,
+                "path": nodePath
+            });
+
+            localStorage.setItem('DTree', JSON.stringify(items));
+            Toast('Diagram Successfully Saved!', 'success');
+        }catch(e){
+            Toast(e);
+        }  
+    }
+
+    updateInstance(input){
+        let idx = input.getAttribute("idx");
+        let newName =  input.value;
+        if(idx == undefined || idx == '') return false;
+        
+        newName = (newName.trim().length <= 0) ? input.getAttribute('placeholder'): newName;
+        let items = localStorage.getItem('DTree');
+        items = (items == undefined || items.trim().length == 0)? [] : items;
+        items = (typeof(items) !== "string")? items: JSON.parse(items);
+        
+        let key = Object.keys(items[idx])[0];
+        let content = items[idx][key];
+        items[idx][newName] = content;
+        if(key != newName)
+            delete items[idx][key];
+        input.setAttribute('key', newName);
+        localStorage.setItem('DTree', JSON.stringify(items));
+    }
+
+    removeInstance(){
+        let items = localStorage.getItem('DTree');
+        let idx = parseInt(localStorage.getItem('idx'));
+        let key = localStorage.getItem('key');
+
+        items = (items == undefined || items.trim().length == 0)? [] : items;
+        items = (typeof(items) !== "string")? items: JSON.parse(items);
+        items = items.filter((i,j)=> j != idx);
+
+        const input = document.querySelector(`[key=${key}`);
+        input.parentNode.removeChild(input);
+        localStorage.setItem('DTree', JSON.stringify(items));
+    }
+
+    renderInstance(){
+        let idx = parseInt(localStorage.getItem('idx'));
+        let key = localStorage.getItem('key');
+        let items = localStorage.getItem('DTree');
+
+        items = (items == undefined || items.trim().length == 0)? [] : items;
+        items = (typeof(items) !== "string")? items: JSON.parse(items);
+        let content = items[idx][key];
+        this.autoDraw = true;
+        this.DTree = items;
+        this.diagram.loadFromString(content);
     }
 }
 

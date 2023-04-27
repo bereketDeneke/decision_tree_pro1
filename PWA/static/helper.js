@@ -40,7 +40,9 @@ function decision_node(arr, id, s='', ifCheckbox = true, elif_ = false){
     
     return {val, ifCheckbox, unique_id};
 }
-var modal = document.querySelector('ion-modal');
+
+var modal = document.querySelector('#NodeOverviewModal');
+let instanceModal = document.querySelector("#SavedInstancesModal");
   // let is_maximized = false;
 
 function dismiss() {
@@ -52,14 +54,28 @@ function dismiss() {
     modal.dismiss();
 }
 
-async function Toast(msg) {
-const notification = document.querySelector("#toast_container");
-notification.querySelector("label").innerText = msg;
-notification.classList.add('error');
-setTimeout(()=>{
-    // remove the class 
-    notification.classList.remove('error');
-}, 1000);
+function dismissInstanceModal(){
+    instanceModal.isOpen = false;
+    instanceModal.canDismiss = true;
+    
+    const instanceContainer = document.querySelector("#instancecontainer");
+    const nameContainer = document.querySelector(".instanceNameContainer");
+
+    instanceContainer.innerHTML = "";
+    nameContainer.innerHTML = "";
+    instanceModal.dismiss();
+    DecisionTree.autoDraw = false;
+
+}
+
+async function Toast(msg, msgType = 'error') {
+    const notification = document.querySelector("#toast_container");
+    notification.querySelector("label").innerText = msg;
+    notification.classList.add(msgType);
+    setTimeout(()=>{
+        // remove the class 
+        notification.classList.remove(msgType);
+    }, 1000);
 }
 
 const searchInput = document.querySelector('ion-searchbar');
@@ -98,7 +114,7 @@ function openModal(header){
     const node = header.parentNode;
     const id = header.getAttribute('data-modal-id'); 
     const question = header.textContent;
-    let pResponse = node.querySelector('select'); // possible responses for the question
+    let pResponse = node.querySelector('select'); // Possible responses for the question
     let is_form = false;
     const question_el = document.querySelector('#_question');
     question_el.textContent = question;
@@ -201,5 +217,64 @@ function active_node(node){
 function fresh_start(){
     cleanCanvas();
     input();
+}
+
+
+function displayInstanceContent(content){
+    let items = localStorage.getItem('DTree');
+    items = (items == undefined || items.trim().length == 0)? [] : items;
+    items = (typeof(items) !== "string")? items: JSON.parse(items);
+
+    const instanceContainer = document.querySelector("#instancecontainer");
+    const renderInstance = document.querySelector("#renderInstance");
+    const removeInstance = document.querySelector("#removeInstance");
+
+    const idx = content.getAttribute('idx');
+    const key = content.getAttribute('key');
+
+    localStorage.setItem('idx', idx);
+    localStorage.setItem('key', key);
+
+    renderInstance.addEventListener('click', ()=>{
+        DecisionTree.renderInstance()
+    });
+    removeInstance.addEventListener('click', ()=>{ 
+        DecisionTree.removeInstance() });
+    instanceContainer.innerHTML = items[idx][key];
+}
+
+function openSavedInstances(header){
+    const nameContainer = document.querySelector(".instanceNameContainer");
+
+    let items = localStorage.getItem('DTree');
+    items = (items == undefined || items.trim().length == 0)? [] : items;
+    items = (typeof(items) !== "string")? items: JSON.parse(items);
+    let index = 0;
+
+    items.forEach((item)=>{
+        let key = Object.keys(item)[0];
+        let input = document.createElement('input');
+        input.setAttribute('type','text');
+        input.setAttribute('placeholder', key);
+        input.setAttribute('idx', index);
+        input.setAttribute('key', key);
+        // input.setAttribute('readonly', 'true');
+        // input.setAttribute('onclick', "this.readOnly='';");
+        input.setAttribute('onclick', `displayInstanceContent(this)`);
+        input.setAttribute('onkeyup', `DecisionTree.updateInstance(this)`);
+        input.style.cssText = `width:100%; padding-left: 6px;`;
+        nameContainer.appendChild(input);
+        index++;
+    });
+    var event = new MouseEvent('click', {
+        'view': window,
+        'bubbles': true,
+        'cancelable': true
+      });
+    if(items.length > 0)
+        document.querySelector('[idx="0"]').dispatchEvent(event);;
+        
+    instanceModal.canDismiss = false;
+    instanceModal.isOpen = true;
 }
 
