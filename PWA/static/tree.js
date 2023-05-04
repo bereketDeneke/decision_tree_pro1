@@ -1271,7 +1271,7 @@ class Tree{
         items = (typeof(items) !== "string")? items: JSON.parse(items);
         items = items.filter((i,j)=> j != idx);
 
-        const input = document.querySelector(`[key=${key}`);
+        const input = document.querySelector(`[key="${key}"]`);
         input.parentNode.removeChild(input);
         localStorage.setItem('DTree', JSON.stringify(items));
     }
