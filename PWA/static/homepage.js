@@ -63,6 +63,9 @@ function cleanCanvas(){
 }
 
 function loadTree(element){
+	const fileName = element.textContent;
+	localStorage.setItem('fname', fileName.trim());
+
 	const URL = element.getAttribute('data-url');
 	$.get(URL, function( data ) {
 		textArea = data;

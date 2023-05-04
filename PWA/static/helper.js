@@ -224,7 +224,7 @@ function displayInstanceContent(content){
     let items = localStorage.getItem('DTree');
     items = (items == undefined || items.trim().length == 0)? [] : items;
     items = (typeof(items) !== "string")? items: JSON.parse(items);
-
+    
     const instanceContainer = document.querySelector("#instancecontainer");
     const renderInstance = document.querySelector("#renderInstance");
     const removeInstance = document.querySelector("#removeInstance");
@@ -240,7 +240,22 @@ function displayInstanceContent(content){
     });
     removeInstance.addEventListener('click', ()=>{ 
         DecisionTree.removeInstance() });
-    instanceContainer.innerHTML = items[idx][key];
+    // instanceContainer.innerHTML = items[idx][key];
+    const fname = items[idx]['fileName'];
+    const date = items[idx]['date'];
+    // const templates 
+    instanceContainer.innerHTML = `File Name: <label>${fname}</label> date: ${date}`;
+    let nodes = JSON.parse(items[idx][key]).items.filter(x=> x.__type == "MindFusion.Diagramming.ControlNode");
+    nodes = nodes.map(x=> x.template);
+    
+    const regex = /<p>(.*?)<\/p>/s;
+    nodes = nodes.map(x=> x.match(regex)[1]);
+
+    nodes.forEach(node =>{
+        instanceContainer.innerHTML += `
+           <div class='result-card' style='margin-top:5px; margin-bottom:3px; padding:4px; border-radius:0px;'>${node}</div> 
+        `;
+    });
 }
 
 function openSavedInstances(header){
