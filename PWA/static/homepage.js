@@ -63,6 +63,9 @@ function cleanCanvas(){
 }
 
 function loadTree(element){
+	const fileName = element.textContent;
+	localStorage.setItem('fname', fileName.trim());
+
 	const URL = element.getAttribute('data-url');
 	$.get(URL, function( data ) {
 		textArea = data;
@@ -82,7 +85,6 @@ function loadTree(element){
 function input() {
 	// check if the textarea is empty or not
 	if(textArea.length <= 0) {	
-		// TODO: alert the user to choose topic before continuing
 		return false;
 	}
 

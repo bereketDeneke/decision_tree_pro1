@@ -1224,13 +1224,16 @@ class Tree{
             });
 
             let items = localStorage.getItem('DTree');
+            let fName = localStorage.getItem('fname');
             items = (items == undefined || items.trim().length == 0)? [] : items;
             items = (typeof(items) !== "string")? items: JSON.parse(items);
 
             let name = this.generateRandomName();
             items.push({
                 [name]: diagramString,
-                "path": nodePath
+                path: nodePath,
+                date:(new Date).toDateString(),
+                fileName: fName
             });
 
             localStorage.setItem('DTree', JSON.stringify(items));
@@ -1268,7 +1271,7 @@ class Tree{
         items = (typeof(items) !== "string")? items: JSON.parse(items);
         items = items.filter((i,j)=> j != idx);
 
-        const input = document.querySelector(`[key=${key}`);
+        const input = document.querySelector(`[key="${key}"]`);
         input.parentNode.removeChild(input);
         localStorage.setItem('DTree', JSON.stringify(items));
     }
