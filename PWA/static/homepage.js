@@ -85,7 +85,6 @@ function loadTree(element){
 function input() {
 	// check if the textarea is empty or not
 	if(textArea.length <= 0) {	
-		// TODO: alert the user to choose topic before continuing
 		return false;
 	}
 
