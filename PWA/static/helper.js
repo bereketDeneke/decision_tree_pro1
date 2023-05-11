@@ -244,7 +244,7 @@ function displayInstanceContent(content){
     const fname = items[idx]['fileName'];
     const date = items[idx]['date'];
     // const templates 
-    instanceContainer.innerHTML = `File Name: <label>${fname}</label> date: ${date}`;
+    instanceContainer.innerHTML = `File Name: <label><b>${fname}</b></label></br> date: <b>${date}</b>`;
     let nodes = JSON.parse(items[idx][key]).items.filter(x=> x.__type == "MindFusion.Diagramming.ControlNode");
     nodes = nodes.map(x=> x.template);
     
